@@ -26,7 +26,6 @@ vows.describe('SPDY/basic test').addBatch({
     topic: function() {
       server.listen(PORT, 'localhost', this.callback);
       server.on('request', function(req, res) {
-        console.log(req);
         res.end('hello world!');
       });
     },
@@ -65,20 +64,35 @@ vows.describe('SPDY/basic test').addBatch({
         method: 'GET'
       });
 
-      connection.write(cframe);//, this.callback);
+      connection.write(cframe, this.callback);
     },
     'should be successfull': function() {
     }
   },
   'Waiting for SYN_REPLY frame': {
     topic: function() {
-      var parser = spdy.createParser(connection);
+      connection.zlib = zlib;
+      var parser = spdy.createParser(connection),
+          callback = this.callback;
 
       parser.on('cframe', function(cframe) {
-        console.log(cframe);
+        callback(null, cframe);
       });
     },
-    'should end up w/ that frame': function() {
+    'should end up w/ that frame': function(cframe) {
+      assert.equal(cframe.headers.type, spdy.types.SYN_REPLY);
+      assert.equal(cframe.headers.version, 2);
+      assert.equal(cframe.headers.flags, 0);
+      assert.ok(cframe.headers.c);
+    }
+  }
+}).addBatch({
+  'When calling server.close': {
+    topic: function() {
+      server.close();
+      return true;
+    },
+    'all connections will be dropped': function() {
     }
   }
 }).export(module);
