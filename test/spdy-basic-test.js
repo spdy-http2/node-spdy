@@ -69,21 +69,42 @@ vows.describe('SPDY/basic test').addBatch({
     'should be successfull': function() {
     }
   },
-  'Waiting for SYN_REPLY frame': {
+  'Creating parser': {
     topic: function() {
       connection.zlib = zlib;
-      var parser = spdy.createParser(connection),
-          callback = this.callback;
+      var parser = spdy.createParser(connection);
 
+      return parser;
       parser.on('cframe', function(cframe) {
         callback(null, cframe);
       });
     },
-    'should end up w/ that frame': function(cframe) {
-      assert.equal(cframe.headers.type, spdy.types.SYN_REPLY);
-      assert.equal(cframe.headers.version, 2);
-      assert.equal(cframe.headers.flags, 0);
-      assert.ok(cframe.headers.c);
+    'and waiting for SYN_REPLY': {
+      topic: function(parser) {
+        var callback = this.callback;
+        parser.on('cframe', function(cframe) {
+          callback(null, cframe);
+        });
+      },
+      'should end up w/ that frame': function(cframe) {
+        assert.ok(cframe.headers.c);
+        assert.equal(cframe.headers.type, spdy.types.SYN_REPLY);
+        assert.equal(cframe.headers.version, 2);
+        assert.equal(cframe.headers.flags, 0);
+      }
+    },
+    'and waiting for Data packet': {
+      topic: function(parser) {
+        var callback = this.callback;
+        parser.on('dframe', function(dframe) {
+          callback(null, dframe);
+        });
+      },
+      'should end up w/ that frame': function(dframe) {
+        assert.ok(!dframe.headers.c);
+        assert.equal(dframe.headers.flags & spdy.types.FLAG_FIN,
+                     spdy.types.FLAG_FIN);
+      }
     }
   }
 }).addBatch({
