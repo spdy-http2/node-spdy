@@ -4,8 +4,6 @@
     <link rel=icon type=image/png href="favicon.png" />
     <link rel=stylesheet type=text/css href="style.css" />
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-
     <title>SPDY Server</title>
   </head>
   <body>
@@ -15,13 +13,14 @@
     </section>
 
     <script>
-      $(function (){
+      function init() {
         $.post('ajax', {
           data: true
         }, function(result) {
           $('section#main').append($('<div />').text(JSON.stringify(result)));
         });
-      });
+      };
     </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" onload="init()"></script>
   </body>
 </html>
