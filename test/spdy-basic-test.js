@@ -9,6 +9,7 @@ var spdy = require('../lib/spdy');
 
 var server,
     connection,
+    req,
     zlib,
     PORT = 8000,
     options = {
@@ -31,7 +32,8 @@ vows.describe('SPDY/basic test').addBatch({
   'Listening on this server instance': {
     topic: function() {
       server.listen(PORT, 'localhost', this.callback);
-      server.on('spdyRequest', function(req, res) {
+      server.on('spdyRequest', function(_req, res) {
+        req = _req;
         res.end('hello world!');
       });
     },
@@ -62,7 +64,7 @@ vows.describe('SPDY/basic test').addBatch({
         type: spdy.enums.SYN_STREAM,
         streamID: 1,
         priority: 0,
-        flags: spdy.enums.CONTROL_FLAG_FIN
+        flags: 0
       }, {
         version: 'HTTP/1.1',
         url: '/',
@@ -71,7 +73,29 @@ vows.describe('SPDY/basic test').addBatch({
 
       connection.write(cframe, this.callback);
     },
-    'should be successfull': function() {
+    'should be successfull': {
+      'and sending request body': {
+        topic: function() {
+          var dframe = spdy.createDataFrame(zlib, {
+            streamID: 1,
+            flags: spdy.enums.DATA_FLAG_FIN
+          }, new Buffer('npn-spdy'));
+
+          var buffer = '';
+          req.on('data', function(data) {
+            buffer += data;
+          });
+
+          var callback = this.callback;
+          req.on('end', function() {
+            callback(null, buffer);
+          });
+          connection.write(dframe);
+        },
+        'should emit `data` and `end` events on request': function(data) {
+          assert.equal(data, 'npn-spdy');
+        }
+      }
     }
   },
   'Creating parser': {
