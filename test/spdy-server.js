@@ -20,6 +20,23 @@ var options = {
 var static = require('connect').static(__dirname + '/../pub');
 
 spdy.createServer(options, function(req, res) {
+  if (req.method == 'POST') {
+    var buffer = '';
+    req.on('data', function(data) {
+      buffer += data;
+    });
+
+    req.on('end', function() {
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      });
+      res.end(JSON.stringify({
+        ok: true
+      }));
+    });
+    return;
+  }
+
   static(req, res, function() { 
     res.writeHead(404);
     res.end();

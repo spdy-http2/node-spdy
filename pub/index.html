@@ -4,6 +4,8 @@
     <link rel=icon type=image/png href="favicon.png" />
     <link rel=stylesheet type=text/css href="style.css" />
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+
     <title>SPDY Server</title>
   </head>
   <body>
@@ -11,5 +13,15 @@
       <h1 class=title>Node.js TLS NPN SPDY server just works!</h1>
       <img src="spdy.jpg" />
     </section>
+
+    <script>
+      $(function (){
+        $.post('ajax', {
+          data: true
+        }, function(result) {
+          $('section#main').append($('<div />').text(JSON.stringify(result)));
+        });
+      });
+    </script>
   </body>
 </html>
