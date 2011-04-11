@@ -1,7 +1,8 @@
 /**
  * Test for SPDY module
  */
-var vows = require('vows'),
+var fs = require('fs'),
+    vows = require('vows'),
     assert = require('assert');
 
 var spdy = require('../lib/spdy');
@@ -9,12 +10,17 @@ var spdy = require('../lib/spdy');
 var server,
     connection,
     zlib,
-    PORT = 8000;
+    PORT = 8000,
+    options = {
+      key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
+      cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
+      ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem')
+    };
 
 vows.describe('SPDY/basic test').addBatch({
   'spdy.createServer': {
     topic: function() {
-      return spdy.createServer();
+      return spdy.createServer(options);
     },
     'should return spdy.Server instance': function (_server) {
       assert.instanceOf(_server, spdy.Server);
@@ -25,7 +31,7 @@ vows.describe('SPDY/basic test').addBatch({
   'Listening on this server instance': {
     topic: function() {
       server.listen(PORT, 'localhost', this.callback);
-      server.on('request', function(req, res) {
+      server.on('spdyRequest', function(req, res) {
         res.end('hello world!');
       });
     },
@@ -35,8 +41,7 @@ vows.describe('SPDY/basic test').addBatch({
 }).addBatch({
   'Creating new connection to this server': {
     topic: function() {
-      connection = require('net').createConnection(PORT, 'localhost');
-      connection.on('connect', this.callback);
+      connection = require('tls').connect(PORT, 'localhost', options, this.callback);
     },
     'should receive connect event': function() {
     }
