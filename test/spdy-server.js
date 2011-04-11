@@ -17,22 +17,13 @@ var options = {
   NPNProtocols: NPNProtocols
 };
 
-var page = new Buffer([
-  '<!DOCTYPE html>',
-  '<html>',
-  '<head>',
-  '</head>',
-  '<body>',
-  '<h1>SPDY via TLS NPN just works!</h1>',
-  '</body>',
-  '</html>'
-].join(''));
+var static = require('connect').static(__dirname + '/../pub');
 
 spdy.createServer(options, function(req, res) {
-  res.writeHead(200, 'SPDY WORKS!', {
-    'Content-Type': 'text/html'
+  static(req, res, function() { 
+    res.writeHead(404);
+    res.end();
   });
-  res.end(page);
 }).listen(8081, function() {
   console.log('TLS NPN Server is running on port : %d', 8081);
 });

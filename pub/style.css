@@ -1,0 +1,14 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+section#main {
+  margin: 0 auto;
+  max-width: 600px;
+  text-align: center;
+}
+
+section#main h1.title {
+  color: #333;
+}
