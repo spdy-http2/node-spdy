@@ -59,10 +59,10 @@ vows.describe('SPDY/basic test').addBatch({
   'Sending control SYN_STREAM frame': {
     topic: function() {
       var cframe = spdy.createControlFrame(zlib, {
-        type: spdy.types.SYN_STREAM,
+        type: spdy.enums.SYN_STREAM,
         streamID: 1,
         priority: 0,
-        flags: spdy.types.FLAG_FIN
+        flags: spdy.enums.CONTROL_FLAG_FIN
       }, {
         version: 'HTTP/1.1',
         url: '/',
@@ -93,7 +93,7 @@ vows.describe('SPDY/basic test').addBatch({
       },
       'should end up w/ that frame': function(cframe) {
         assert.ok(cframe.headers.c);
-        assert.equal(cframe.headers.type, spdy.types.SYN_REPLY);
+        assert.equal(cframe.headers.type, spdy.enums.SYN_REPLY);
         assert.equal(cframe.headers.version, 2);
         assert.equal(cframe.headers.flags, 0);
       }
@@ -107,8 +107,8 @@ vows.describe('SPDY/basic test').addBatch({
       },
       'should end up w/ that frame': function(dframe) {
         assert.ok(!dframe.headers.c);
-        assert.equal(dframe.headers.flags & spdy.types.FLAG_FIN,
-                     spdy.types.FLAG_FIN);
+        assert.equal(dframe.headers.flags & spdy.enums.DATA_FLAG_FIN,
+                     spdy.enums.DATA_FLAG_FIN);
       }
     }
   }
