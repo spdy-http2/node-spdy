@@ -1,0 +1,15 @@
+{
+  "name": "spdy",
+  "description": "...",
+  "version": "0.0.1",
+
+  "author": "Fedor Indutny <fedor.indutny@gmail.com>",
+
+  "dependencies": {
+    "zlibcontext": ">= 1.0.4"
+  },
+
+  "engine": ["node >= 0.4.0"],
+
+  "main": "./lib/spdy"
+}
