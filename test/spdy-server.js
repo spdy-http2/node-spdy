@@ -33,4 +33,6 @@ spdy.createServer(options, function(req, res) {
     'Content-Type': 'text/html'
   });
   res.end(page);
-}).listen(8081);
+}).listen(8081, function() {
+  console.log('TLS NPN Server is running on port : %d', 8081);
+});
