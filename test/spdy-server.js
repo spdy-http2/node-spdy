@@ -7,14 +7,11 @@ var fs = require('fs'),
 
 if (!tls.hasNPN) throw 'You\'re using not NPN-enabled version of node.js';
 
-NPNProtocols[0] = 6;
-NPNProtocols.write('spdy/2', 1);
-
 var options = {
   key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
   cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
-  NPNProtocols: NPNProtocols
+  NPNProtocols: ['spdy/2']
 };
 
 var static = require('connect').static(__dirname + '/../pub');

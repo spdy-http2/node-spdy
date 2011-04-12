@@ -15,7 +15,9 @@ var server,
     options = {
       key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
       cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
-      ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem')
+      ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
+      npnProtocols: ['spdy/2'],
+      debug: true
     };
 
 vows.describe('SPDY/basic test').addBatch({
@@ -32,7 +34,7 @@ vows.describe('SPDY/basic test').addBatch({
   'Listening on this server instance': {
     topic: function() {
       server.listen(PORT, 'localhost', this.callback);
-      server.on('spdyRequest', function(_req, res) {
+      server.on('request', function(_req, res) {
         req = _req;
         res.end('hello world!');
       });
@@ -81,12 +83,13 @@ vows.describe('SPDY/basic test').addBatch({
             flags: spdy.enums.DATA_FLAG_FIN
           }, new Buffer('npn-spdy'));
 
-          var buffer = '';
+          var buffer = '',
+              callback = this.callback;
+
           req.on('data', function(data) {
             buffer += data;
           });
 
-          var callback = this.callback;
           req.on('end', function() {
             callback(null, buffer);
           });
