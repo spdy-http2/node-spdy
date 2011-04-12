@@ -28,9 +28,7 @@ spdy.createServer(options, function(req, res) {
       res.writeHead(200, {
         'Content-Type': 'application/json'
       });
-      res.end(JSON.stringify({
-        ok: true
-      }));
+      res.end(JSON.stringify(new Array(1e6).join('1000')));
     });
     return;
   }

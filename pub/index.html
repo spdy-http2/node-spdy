@@ -17,7 +17,7 @@
         $.post('ajax', {
           data: true
         }, function(result) {
-          $('section#main').append($('<div />').text(JSON.stringify(result)));
+          $('section#main').append($('<div />').text('AJAX request ended'));
         });
       };
     </script>
