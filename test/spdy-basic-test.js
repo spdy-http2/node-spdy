@@ -103,8 +103,9 @@ vows.describe('SPDY/basic test').addBatch({
   },
   'Creating parser': {
     topic: function() {
-      connection.zlib = zlib;
-      var parser = spdy.createParser(connection);
+      var parser = spdy.createParser(zlib);
+      
+      connection.pipe(parser);
 
       return parser;
       parser.on('cframe', function(cframe) {

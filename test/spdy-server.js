@@ -17,6 +17,7 @@ var options = {
 var static = require('connect').static(__dirname + '/../pub');
 
 spdy.createServer(options, function(req, res) {
+  console.log('<< %s %s', req.method, req.url);
   if (req.method == 'POST') {
     var buffer = '';
     req.on('data', function(data) {
