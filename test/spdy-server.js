@@ -5,7 +5,7 @@ var fs = require('fs'),
     buffer = require('buffer').Buffer,
     NPNProtocols = new Buffer(7);
 
-if (!tls.hasNPN) throw 'You\'re using not NPN-enabled version of node.js';
+if (!tls.NPN_ENABLED) throw 'You\'re using not NPN-enabled version of node.js';
 
 var options = {
   key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
@@ -15,6 +15,8 @@ var options = {
 };
 
 var static = require('connect').static(__dirname + '/../pub');
+
+var bigBuffer = new Buffer(JSON.stringify({ok: true}));
 
 spdy.createServer(options, function(req, res) {
   console.log('<< %s %s', req.method, req.url);
@@ -28,7 +30,7 @@ spdy.createServer(options, function(req, res) {
       res.writeHead(200, {
         'Content-Type': 'application/json'
       });
-      res.end(JSON.stringify(new Array(1e6).join('1000')));
+      res.end(bigBuffer);
     });
     return;
   }
