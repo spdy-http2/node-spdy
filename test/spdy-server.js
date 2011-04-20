@@ -19,7 +19,6 @@ var static = require('connect').static(__dirname + '/../pub');
 var bigBuffer = new Buffer(JSON.stringify({ok: true}));
 
 spdy.createServer(options, function(req, res) {
-  console.log('<< %s %s', req.method, req.url);
   if (req.method == 'POST') {
     var buffer = '';
     req.on('data', function(data) {
