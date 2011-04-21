@@ -25,7 +25,7 @@ version, but you'll need to compile it with latest available version of OpenSSL
       NPNProtocols: ['spdy/2']
     };
 
-    spdy.createServer(options, function(req, res) {
+    spdy.createTlsServer(options, function(req, res) {
       res.writeHead(200);
       res.end('hello world!');
     });

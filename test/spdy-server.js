@@ -16,9 +16,7 @@ var options = {
 
 var static = require('connect').static(__dirname + '/../pub');
 
-var bigBuffer = new Buffer(JSON.stringify({ok: true}));
-
-var server = spdy.createServer(options, function(req, res) {
+var server = spdy.createTlsServer(options, function(req, res) {
   if (req.method == 'POST') {
     res.writeHead(200);
     req.pipe(res);
