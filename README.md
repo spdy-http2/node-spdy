@@ -8,13 +8,13 @@ version, but you'll need to compile it with latest available version of OpenSSL
 
 1. grab http://cvs.openssl.org
 2. build it
-2. build node.js with that version of openssl
+3. build node.js with that version of openssl
 
     ./configure --openssl-includes=/path/to/openssl/include \
                 --openssl-libpath=/path/to/openssl
     make install
 
-3. have fun with SPDY and node.js! 
+4. have fun with SPDY and node.js! 
 
 ## Usage
 
