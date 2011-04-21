@@ -7,8 +7,17 @@ section#main {
   margin: 0 auto;
   max-width: 600px;
   text-align: center;
+  background: url(spdy.jpg) no-repeat 50% 50%;
+  height: 300px;
 }
 
 section#main h1.title {
   color: #333;
 }
+
+section#main div#content {
+  text-shadow: 0 0 5px rgba(0,0,0,0.3);
+  font-size: 25px;
+  background: rgba(255,255,255,0.6);
+}
+

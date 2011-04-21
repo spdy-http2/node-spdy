@@ -18,26 +18,17 @@ var static = require('connect').static(__dirname + '/../pub');
 
 var bigBuffer = new Buffer(JSON.stringify({ok: true}));
 
-spdy.createServer(options, function(req, res) {
+var server = spdy.createServer(options, function(req, res) {
   if (req.method == 'POST') {
-    var buffer = '';
-    req.on('data', function(data) {
-      buffer += data;
-    });
-
-    req.on('end', function() {
-      res.writeHead(200, {
-        'Content-Type': 'application/json'
-      });
-      res.end(bigBuffer);
-    });
+    res.writeHead(200);
+    req.pipe(res);
     return;
   }
-
   static(req, res, function() { 
     res.writeHead(404);
     res.end();
   });
-}).listen(8081, function() {
+});
+server.listen(8081, function() {
   console.log('TLS NPN Server is running on port : %d', 8081);
 });
