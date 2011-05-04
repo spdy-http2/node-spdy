@@ -1,5 +1,7 @@
 # SPDY Server on node.js (BETA)
 
+Require node.js version - at least 0.5.0-pre
+
 With that module you can create true SPDY servers with natural http module
 interface and fallback to HTTPS (for browsers that doesn't support SPDY).
 
