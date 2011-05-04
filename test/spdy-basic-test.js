@@ -116,7 +116,9 @@ vows.describe('SPDY/basic test').addBatch({
       topic: function(parser) {
         var callback = this.callback;
         parser.on('cframe', function(cframe) {
-          callback(null, cframe);
+          if (cframe.headers.type == spdy.enums.SYN_REPLY) {
+            callback(null, cframe);
+          }
         });
       },
       'should end up w/ that frame': function(cframe) {
