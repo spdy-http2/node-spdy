@@ -24,7 +24,7 @@ var server = spdy.createServer(options, function(req, res) {
     req.pipe(res);
     return;
   }
-  static(req, res, function() { 
+  static(req, res, function() {
     res.writeHead(404);
     res.end();
   });
