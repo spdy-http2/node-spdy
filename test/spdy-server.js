@@ -7,6 +7,12 @@ var fs = require('fs'),
 
 if (!tls.NPN_ENABLED) throw 'You\'re using not NPN-enabled version of node.js';
 
+// Don't crash on errors
+process.on('uncaughtException', function (err) {
+  console.log('Caught uncaughtException: ' + err.stack);
+  console.log('Arg1 constructor: ' + err.arguments[1].constructor.toString());
+});
+
 var options = {
   key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
   cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
