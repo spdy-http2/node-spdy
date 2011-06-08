@@ -13,11 +13,10 @@ var server,
     zlib,
     PORT = 8000,
     options = {
-      push: function(req, c) {
-        spdy
-          .createPushStream(req.cframe, c, "http://example.com/foo")
-          .write("push data")
-          .end();
+      push: function(req, c, createPushStream) {
+        var push_stream = createPushStream(req, c, "http://example.com/foo");
+        push_stream.write("push data");
+        push_stream.end();
       },
       key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
       cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
