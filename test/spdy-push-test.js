@@ -13,10 +13,8 @@ var server,
     zlib,
     PORT = 8000,
     options = {
-      push: function(req, c, createPushStream) {
-        var push_stream = createPushStream(req, c, "http://example.com/foo");
-        push_stream.write("push data");
-        push_stream.end();
+      push: function(pusher) {
+        pusher.push("pub/style.css", "http://example.com/foo");
       },
       key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
       cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
@@ -25,7 +23,7 @@ var server,
       debug: true
     };
 
-vows.describe('SPDY/basic test').addBatch({
+vows.describe('SPDY/push test').addBatch({
   'spdy.createServer': {
     topic: function() {
       return spdy.createServer(options);
