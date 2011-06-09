@@ -14,7 +14,7 @@ var server,
     PORT = 8000,
     options = {
       push: function(pusher) {
-        pusher.push("pub/style.css", "http://example.com/foo");
+        pusher.push_file("pub/style.css", "http://example.com/foo");
       },
       key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
       cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),

@@ -19,8 +19,8 @@ var options = {
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
   NPNProtocols: ['spdy/2'],
   push: function(pusher) {
-    pusher.push("pub/style.css", "https://localhost:8082/style.css");
-    pusher.push("pub/spdy.jpg", "https://localhost:8082/spdy.jpg");
+    pusher.push_file("pub/style.css", "https://localhost:8082/style.css");
+    pusher.push_file("pub/spdy.jpg", "https://localhost:8082/spdy.jpg");
   }
 };
 
