@@ -19,6 +19,14 @@ var options = {
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
   NPNProtocols: ['spdy/2'],
   push: function(pusher) {
+    // Only push in response to the first request
+    if (pusher.streamID > 1) return;
+
+    // It's also possible to conditionally respond based on the request
+    // var req = pusher.cframe.data.nameValues;
+    // if (req.url != "/") return;
+    // if (req.method != "GET") return;
+
     pusher.push_file("pub/style.css", "https://localhost:8082/style.css");
     pusher.push_file("pub/spdy.jpg", "https://localhost:8082/spdy.jpg");
   }
