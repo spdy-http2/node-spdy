@@ -17,7 +17,19 @@ var options = {
   key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
   cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
-  NPNProtocols: ['spdy/2']
+  NPNProtocols: ['spdy/2'],
+  push: function(pusher) {
+    // Only push in response to the first request
+    if (pusher.streamID > 1) return;
+
+    // It's also possible to conditionally respond based on the request
+    // var req = pusher.cframe.data.nameValues;
+    // if (req.url != "/") return;
+    // if (req.method != "GET") return;
+
+    pusher.push_file("pub/style.css", "https://localhost:8082/style.css");
+    pusher.push_file("pub/spdy.jpg", "https://localhost:8082/spdy.jpg");
+  }
 };
 
 var static = require('connect').static(__dirname + '/../pub');
@@ -35,6 +47,6 @@ var server = spdy.createServer(options, function(req, res) {
     res.end();
   });
 });
-server.listen(8081, function() {
-  console.log('TLS NPN Server is running on port : %d', 8081);
+server.listen(8082, function() {
+  console.log('TLS NPN Server is running on port : %d', 8082);
 });
