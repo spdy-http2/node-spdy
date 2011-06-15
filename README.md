@@ -1,6 +1,7 @@
 # SPDY Server on node.js (BETA)
 
 Required node.js version - at least 0.5.0-pre
+Because of libuv integration in node.js core latest version of one is not usable, try this checking out at this commit instead: https://github.com/joyent/node/commit/9812e31
 
 With that module you can create true [SPDY](http://www.chromium.org/spdy) servers with natural http module interface and fallback to HTTPS (for browsers that doesn't support SPDY).
 
