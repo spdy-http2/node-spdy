@@ -1,12 +1,14 @@
 # SPDY Server on node.js (BETA)
 
-Require node.js version - at least 0.5.0-pre
+Required node.js version - at least 0.5.0-pre
 
-With that module you can create true SPDY servers with natural http module
-interface and fallback to HTTPS (for browsers that doesn't support SPDY).
+With that module you can create true SPDY servers with natural http module interface and fallback to HTTPS (for browsers that doesn't support SPDY).
 
-It's using SSL's NPN feature that will be available in node.js from 0.5.0-pre
-version, but you'll need to compile it with latest available version of OpenSSL
+It's using SSL's NPN feature that will be available in node.js from 0.5.0-pre version, but you'll need to compile it with latest available version of OpenSSL.
+
+Instruction for setting up development environment can be found in @eee-c article here: http://japhr.blogspot.com/2011/06/setting-up-node-spdy.html
+
+## Alternative instructions
 
 1. grab http://cvs.openssl.org
 2. build it
