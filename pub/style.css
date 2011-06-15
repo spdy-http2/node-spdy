@@ -15,6 +15,16 @@ section#main h1.title {
   color: #333;
 }
 
+section#main div#note {
+  font-size: 15px;
+  text-shadow: 0 0 4px rgba(255,255,255,0.5);
+  background: rgba(0,0,0,0.6);
+  display: inline-block;
+  color: white;
+  padding: 10px 5px;
+  margin-bottom: 17px;
+}
+
 section#main div#content {
   text-shadow: 0 0 5px rgba(0,0,0,0.3);
   font-size: 25px;

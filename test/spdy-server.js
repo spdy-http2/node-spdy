@@ -30,6 +30,9 @@ var server = spdy.createServer(options, function(req, res) {
     req.pipe(res);
     return;
   }
+  if (req.streamID && req.url == '/') {
+    req.url = '/index-spdy.html';
+  }
   static(req, res, function() {
     res.writeHead(404);
     res.end();
