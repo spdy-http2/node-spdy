@@ -39,6 +39,10 @@ Instruction for setting up development environment can be found in @eee-c articl
 As you can see it provides well known req/res interface for handling requests
 and responding to them.
 
+## Helping project
+
+Node-spdy is open for donations, please feel free to contact me for any futher information: fedor@indutny.com
+
 ## LICENSE
 
 This software is licensed under the MIT License.
