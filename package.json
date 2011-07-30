@@ -1,7 +1,7 @@
 {
   "name": "spdy",
   "description": "Implementation of the SPDY protocol on node.js.",
-  "version": "0.1.1",
+  "version": "0.1.2",
 
   "author": "Fedor Indutny <fedor.indutny@gmail.com>",
 
