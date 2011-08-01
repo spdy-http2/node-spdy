@@ -24,11 +24,11 @@ var options = {
 
     // It's also possible to conditionally respond based on the request
     // var req = pusher.cframe.data.nameValues;
-    // if (req.url != "/") return;
-    // if (req.method != "GET") return;
+    // if (req.url != '/') return;
+    // if (req.method != 'GET') return;
 
-    pusher.push_file("pub/style.css", "https://localhost:8082/style.css");
-    pusher.push_file("pub/spdy.jpg", "https://localhost:8082/spdy.jpg");
+    pusher.push_file('pub/style.css', 'https://localhost:8082/style.css');
+    pusher.push_file('pub/spdy.jpg', 'https://localhost:8082/spdy.jpg');
   }
 };
 
