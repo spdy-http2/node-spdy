@@ -23,11 +23,11 @@ var server,
 vows.describe('SPDY/basic test').addBatch({
   'spdy.createServer': {
     topic: function() {
-      return spdy.createServer(options);
+      return {server: spdy.createServer(options)};
     },
-    'should return spdy.Server instance': function (_server) {
-      assert.instanceOf(_server, spdy.Server);
-      server = _server;
+    'should return spdy.Server instance': function (topic) {
+      server = topic.server;
+      assert.instanceOf(server, spdy.Server);
     }
   }
 }).addBatch({
@@ -104,7 +104,7 @@ vows.describe('SPDY/basic test').addBatch({
   'Creating parser': {
     topic: function() {
       var parser = spdy.createParser(zlib);
-      
+
       connection.pipe(parser);
 
       return parser;
