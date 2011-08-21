@@ -25,8 +25,8 @@ vows.describe('SPDY/basic test').addBatch({
     topic: function() {
       return {server: spdy.createServer(options)};
     },
-    'should return spdy.Server instance': function (topic) {
-      server = topic.server;
+    'should return spdy.Server instance': function (context) {
+      server = context.server;
       assert.instanceOf(server, spdy.Server);
     }
   }
@@ -107,14 +107,15 @@ vows.describe('SPDY/basic test').addBatch({
 
       connection.pipe(parser);
 
-      return parser;
+      return {parser: parser};
       parser.on('cframe', function(cframe) {
         callback(null, cframe);
       });
     },
     'and waiting for SYN_REPLY': {
-      topic: function(parser) {
-        var callback = this.callback;
+      topic: function(context) {
+        var parser = context.parser
+          , callback = this.callback;
         parser.on('cframe', function(cframe) {
           if (cframe.headers.type == spdy.enums.SYN_REPLY) {
             callback(null, cframe);
@@ -129,8 +130,9 @@ vows.describe('SPDY/basic test').addBatch({
       }
     },
     'and waiting for Data packet': {
-      topic: function(parser) {
-        var callback = this.callback;
+      topic: function(context) {
+        var parser = context.parser
+          , callback = this.callback;
         parser.on('dframe', function(dframe) {
           callback(null, dframe);
         });
