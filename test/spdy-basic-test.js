@@ -108,9 +108,6 @@ vows.describe('SPDY/basic test').addBatch({
       connection.pipe(parser);
 
       return {parser: parser};
-      parser.on('cframe', function(cframe) {
-        callback(null, cframe);
-      });
     },
     'and waiting for SYN_REPLY': {
       topic: function(context) {
@@ -134,7 +131,24 @@ vows.describe('SPDY/basic test').addBatch({
         var parser = context.parser
           , callback = this.callback;
         parser.on('dframe', function(dframe) {
-          callback(null, dframe);
+          if (dframe.headers.flags == 0) {
+            callback(null, dframe);
+          }
+        });
+      },
+      'should end up w/ that frame': function(dframe) {
+        assert.ok(!dframe.headers.c);
+        assert.equal(0, dframe.headers.flags & spdy.enums.DATA_FLAG_FIN);
+      }
+    },
+    'and waiting for Data FIN': {
+      topic: function(context) {
+        var parser = context.parser
+          , callback = this.callback;
+        parser.on('dframe', function(dframe) {
+          if (dframe.headers.flags != 0) {
+            callback(null, dframe);
+          }
         });
       },
       'should end up w/ that frame': function(dframe) {
