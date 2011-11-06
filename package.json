@@ -6,10 +6,10 @@
   "author": "Fedor Indutny <fedor.indutny@gmail.com>",
 
   "dependencies": {
-    "zlibcontext": ">= 1.0.4"
+    "zlibcontext": "~ 1.0.9"
   },
 
-  "engines": ["node >=0.5.0-pre <0.5.4 || >0.5.4"],
+  "engines": ["node >= 0.6.0"],
 
   "main": "./lib/spdy"
 }
