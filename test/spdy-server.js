@@ -5,7 +5,7 @@ var fs = require('fs'),
     buffer = require('buffer').Buffer,
     NPNProtocols = new Buffer(7);
 
-if (!tls.NPN_ENABLED) throw 'You\'re using not NPN-enabled version of node.js';
+// if (!tls.NPN_ENABLED) throw 'You\'re using not NPN-enabled version of node.js';
 
 // Don't crash on errors
 process.on('uncaughtException', function (err) {
