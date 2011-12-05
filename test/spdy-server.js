@@ -1,11 +1,5 @@
 var fs = require('fs'),
-    http = require('http'),
-    spdy = require('../lib/spdy'),
-    tls = require('tls'),
-    buffer = require('buffer').Buffer,
-    NPNProtocols = new Buffer(7);
-
-// if (!tls.NPN_ENABLED) throw 'You\'re using not NPN-enabled version of node.js';
+    spdy = require('../lib/spdy');
 
 // Don't crash on errors
 process.on('uncaughtException', function (err) {
@@ -21,8 +15,6 @@ var options = {
 
 var static = require('connect').static(__dirname + '/../pub');
 
-var bigBuffer = new Buffer(JSON.stringify({ok: true}));
-
 var server = spdy.createServer(options, function(req, res) {
   if (req.method == 'POST') {
     res.writeHead(200);
@@ -32,6 +24,7 @@ var server = spdy.createServer(options, function(req, res) {
   if (req.streamID && req.url == '/') {
     req.url = '/index-spdy.html';
   }
+
   static(req, res, function() {
     res.writeHead(404);
     res.end();
