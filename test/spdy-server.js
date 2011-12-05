@@ -17,7 +17,6 @@ var options = {
   key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
   cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
-  NPNProtocols: ['spdy/2']
 };
 
 var static = require('connect').static(__dirname + '/../pub');
