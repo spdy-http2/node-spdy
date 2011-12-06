@@ -18,11 +18,7 @@ var static = require('connect').static(__dirname + '/../pub');
 var server = spdy.createServer(options, function(req, res) {
   if (req.method == 'POST') {
     res.writeHead(200);
-    req.pause();
-    setTimeout(function() {
-      req.pipe(res);
-      req.resume();
-    }, 5000);
+    req.pipe(res);
     return;
   }
   if (req.streamID && req.url == '/') {
