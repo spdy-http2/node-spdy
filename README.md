@@ -9,6 +9,9 @@ requires you to build node with latest openssl.
 
 ## Node+OpenSSL building
 
+At the moment node-spdy requires zlib dictionary support which will come to
+node.js only in 0.7.x version.
+
 ```bash
 # Download and build zlib (you'll need to install it globally)
 wget http://www.zlib.net/zlib-1.2.5.tar.gz
@@ -30,9 +33,9 @@ make install
 echo 'export LD_LIBRARY_PATH=$HOME/.local/openssl/lib:$LD_LIBRARY_PATH' >> .bashrc
 
 # Download and build node
-wget http://nodejs.org/dist/v0.6.5/node-v0.6.5.tar.gz
-tar -xzvf node-v0.6.5.tar.gz
-cd node-v0.6.5
+wget http://nodejs.org/dist/v0.7.0/node-v0.7.0.tar.gz
+tar -xzvf node-v0.7.0.tar.gz
+cd node-v0.7.0
 ./configure --prefix=$HOME/.local/node/npn \
     --openssl-includes=$HOME/.local/openssl/include \
     --openssl-libpath=$HOME/.local/openssl/lib
