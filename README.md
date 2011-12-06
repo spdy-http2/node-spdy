@@ -66,7 +66,12 @@ spdy.listen(443);
 
 Node-spdy is open for donations, please feel free to contact me for any futher information: fedor@indutny.com
 
-## LICENSE
+#### Contributors
+
+* (Fedor Indutny)[https://github.com/indutny]
+* (Chris Storm)[https://github.com/eee-c]
+
+#### LICENSE
 
 This software is licensed under the MIT License.
 
