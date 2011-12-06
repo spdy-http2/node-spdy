@@ -4,7 +4,8 @@
   "version": "0.1.4",
   "author": "Fedor Indutny <fedor.indutny@gmail.com>",
   "contributors": [
-    "Chris Storm <github@eeecooks.com>"
+    "Chris Storm <github@eeecooks.com>",
+    "François de Metz <francois@2metz.fr>"
   ],
   "dependencies": {
   },
