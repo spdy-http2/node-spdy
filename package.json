@@ -4,10 +4,9 @@
   "version": "0.1.4",
   "author": "Fedor Indutny <fedor.indutny@gmail.com>",
   "dependencies": {
-    "zlibcontext": "~ 1.0.9"
   },
   "engines": [
-    "node >= 0.6.0"
+    "node ~ 0.6.6"
   ],
   "main": "./lib/spdy",
   "devDependencies": {}
