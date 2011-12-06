@@ -68,8 +68,8 @@ Node-spdy is open for donations, please feel free to contact me for any futher i
 
 #### Contributors
 
-* (Fedor Indutny)[https://github.com/indutny]
-* (Chris Storm)[https://github.com/eee-c]
+* [Fedor Indutny](https://github.com/indutny)
+* [Chris Storm](https://github.com/eee-c)
 
 #### LICENSE
 
