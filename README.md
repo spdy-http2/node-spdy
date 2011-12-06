@@ -1,43 +1,66 @@
-# SPDY Server on node.js (BETA)
+# SPDY Server for node.js
 
-Required node.js version - at least 0.5.0-pre.
+With this module you can create [SPDY](http://www.chromium.org/spdy) servers
+in node.js with natural http module interface and fallback to regular https
+(for browsers that doesn't support SPDY yet).
 
-Because of libuv integration in node.js core latest version of one is not usable, try this checking out at this commit instead: https://github.com/joyent/node/commit/9812e31
+It's using SSL's NPN feature that is available in node from 0.6.0 version, but
+requires you to build node with latest openssl.
 
-With that module you can create true [SPDY](http://www.chromium.org/spdy) servers with natural http module interface and fallback to HTTPS (for browsers that doesn't support SPDY).
+## Node+OpenSSL building
 
-It's using SSL's NPN feature that will be available in node.js from 0.5.0-pre version, but you'll need to compile it with latest available version of OpenSSL.
+```bash
+# Download and build zlib (you'll need to install it globally)
+wget http://www.zlib.net/zlib-1.2.5.tar.gz
+tar -xzvf zlib-1.2.5.tar.gz
+cd zlib-1.2.5
+./configure
+sudo make install
 
-Instruction for setting up development environment can be found in @eee-c article here: http://japhr.blogspot.com/2011/06/setting-up-node-spdy.html
+# Download and build openssl
+wget ftp://ftp.openssl.org/snapshot/openssl-1.0.1-stable-SNAP-20111206.tar.gz
+tar -xzvf openssl-1.0.1-stable-SNAP-20111206
+cd openssl-1.0.1-stable-SNAP-20111206
+./config shared zlib --prefix=~/.local/openssl # add -fPIC if you're on x86-64
+make depend
+make
+make install
 
-## Alternative instructions
+# Allow dynamic linking to custom version of openssl
+echo 'export LD_LIBRARY_PATH=$HOME/.local/openssl/lib:$LD_LIBRARY_PATH' >> .bashrc
 
-1. grab http://cvs.openssl.org
-2. build it
-3. build node.js with that version of openssl
+# Download and build node
+wget http://nodejs.org/dist/v0.6.5/node-v0.6.5.tar.gz
+tar -xzvf node-v0.6.5.tar.gz
+cd node-v0.6.5
+./configure --prefix=$HOME/.local/node/npn \
+    --openssl-includes=$HOME/.local/openssl/include \
+    --openssl-libpath=$HOME/.local/openssl/lib
+make -j4 # If you have 4 CPU cores
+make install
 
-    ./configure --openssl-includes=/path/to/openssl/include \
-                --openssl-libpath=/path/to/openssl
-    make install
-
-4. have fun with SPDY and node.js! 
+# Add node's bin to PATH
+echo 'export PATH=$HOME/.local/node/npn/bin:$PATH' >> .bashrc
+```
 
 ## Usage
 
-    var options = {
-      key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
-      cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
-      ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
-      NPNProtocols: ['spdy/2']
-    };
+```javascript
+var spdy = require('spdy');
 
-    spdy.createServer(options, function(req, res) {
-      res.writeHead(200);
-      res.end('hello world!');
-    });
+var options = {
+  key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
+  cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
+  ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem')
+};
 
-As you can see it provides well known req/res interface for handling requests
-and responding to them.
+spdy.createServer(options, function(req, res) {
+  res.writeHead(200);
+  res.end('hello world!');
+});
+
+spdy.listen(443);
+```
 
 ## Helping project
 
