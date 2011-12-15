@@ -17,12 +17,15 @@ node.js only in 0.7.x version. To build 0.7.x version with a bundled openssl
 git clone git://github.com/joyent/node.git
 cd node
 ./configure --prefix=$HOME/.node/dev # <- or any other dir
+
 # open options.gypi and change line:
 # "node_use_system_openssl": "true" => "node_use_system_openssl": "false"
 vim options.gypi
 make install -j4 # in -jN, N is number of CPU cores on your machine
+
 # Add node's bin to PATH env variable
 echo 'export PATH=$HOME/.node/dev/bin:$PATH' >> ~/.bashrc
+
 #
 # You have working node 0.7.x + NPN now !!!
 #
