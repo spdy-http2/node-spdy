@@ -10,7 +10,7 @@
   "dependencies": {
   },
   "engines": [
-    "node ~ 0.6.6"
+    "node ~ 0.7.0"
   ],
   "main": "./lib/spdy",
   "devDependencies": {}
