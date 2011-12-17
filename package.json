@@ -1,14 +1,13 @@
 {
   "name": "spdy",
   "description": "Implementation of the SPDY protocol on node.js.",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "author": "Fedor Indutny <fedor.indutny@gmail.com>",
   "contributors": [
     "Chris Storm <github@eeecooks.com>",
     "François de Metz <francois@2metz.fr>"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "engines": [
     "node ~ 0.7.0"
   ],
