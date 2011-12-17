@@ -10,8 +10,7 @@ requires you to build node with latest openssl.
 ## Node+OpenSSL building
 
 At the moment node-spdy requires zlib dictionary support, which will come to
-node.js only in 0.7.x version. To build 0.7.x version with a bundled openssl
-(that's needed for NPN feature) follow instructions below:
+node.js only in 0.7.x version. To build 0.7.x version follow instructions below:
 
 ```bash
 git clone git://github.com/joyent/node.git
