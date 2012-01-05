@@ -19,6 +19,10 @@ suite('A Parser of SPDY module', function() {
     };
   });
 
+  teardown(function() {
+    spdy.framer = framer;
+  });
+
   test('should wait for headers initially', function() {
     assert.equal(parser.waiting, 8);
   });
