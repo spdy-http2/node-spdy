@@ -13,7 +13,7 @@ var options = {
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
 };
 
-var static = require('connect').static(__dirname + '/../pub');
+var static = require('connect').static(__dirname + '/public');
 
 var server = spdy.createServer(options, function(req, res) {
   if (req.method == 'POST') {

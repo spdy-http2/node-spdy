@@ -8,9 +8,14 @@
     "François de Metz <francois@2metz.fr>"
   ],
   "dependencies": {},
+  "devDependencies": {
+    "mocha": "0.8.x"
+  },
+  "scripts": {
+    "test": "mocha --ui tdd --growl --reporter spec test/unit/*-test.js"
+  },
   "engines": [
     "node ~ 0.7.0"
   ],
-  "main": "./lib/spdy",
-  "devDependencies": {}
+  "main": "./lib/spdy"
 }

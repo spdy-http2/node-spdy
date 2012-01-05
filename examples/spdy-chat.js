@@ -15,7 +15,7 @@ var options = {
   ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem'),
 };
 
-var static = connect.static(__dirname + '/../pub/chat');
+var static = connect.static(__dirname + '/public/chat');
 
 var server = spdy.createServer(options, function(req, res) {
   static(req, res, function() {
