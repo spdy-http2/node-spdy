@@ -33,9 +33,9 @@ echo 'export PATH=$HOME/.node/dev/bin:$PATH' >> ~/.bashrc
 var spdy = require('spdy');
 
 var options = {
-  key: fs.readFileSync(__dirname + '/../keys/spdy-key.pem'),
-  cert: fs.readFileSync(__dirname + '/../keys/spdy-cert.pem'),
-  ca: fs.readFileSync(__dirname + '/../keys/spdy-csr.pem')
+  key: fs.readFileSync(__dirname + '/keys/spdy-key.pem'),
+  cert: fs.readFileSync(__dirname + '/keys/spdy-cert.pem'),
+  ca: fs.readFileSync(__dirname + '/keys/spdy-csr.pem')
 };
 
 spdy.createServer(options, function(req, res) {
@@ -46,9 +46,27 @@ spdy.createServer(options, function(req, res) {
 spdy.listen(443);
 ```
 
-## Helping project
+### API
 
-Node-spdy is open for donations, please feel free to contact me for any futher information: fedor@indutny.com
+API is compatible with `http` and `https` module, but you can use another
+function as base class for SPDYServer. For example,
+`require('express').HTTPSServer` given that as base class you'll get a server
+compatible with [express](https://github.com/visionmedia/express) API.
+
+```javascript
+spdy.createServer(
+  [base class constructor, i.e. https.Server or express.HTTPSServer],
+  { /* keys and options */ }, // <- the only one required argument
+  [request listener]
+).listen([port], [host], [callback]);
+```
+
+Request listener will receive two arguments: `request` and `response`. They're
+both instances of `http`'s `IncomingMessage` and `OutgoingMessage`. But two
+custom properties are added to both of them: `streamID` and `isSpdy`. The first
+one indicates on which spdy stream are sitting request and response. Latter one
+is always true and can be checked to ensure that incoming request wasn't
+received by HTTPS callback.
 
 #### Contributors
 
