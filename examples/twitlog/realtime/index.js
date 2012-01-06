@@ -49,8 +49,8 @@ exports.init = function(io) {
     io.sockets.emit('tweet', tweet);
 
     tweets.push(tweet);
-    // remember only last 20 tweets
-    tweets = tweets.slice(tweets.length - 20, tweets.length);
+    // remember only last 18 tweets
+    tweets = tweets.slice(tweets.length - 18, tweets.length);
   };
 
   io.sockets.on('connection', function(socket) {

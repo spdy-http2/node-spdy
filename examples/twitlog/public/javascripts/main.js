@@ -4,7 +4,7 @@
       tweets = [];
 
   socket.on('tweet', function(tweet) {
-    if (tweets.length > 20) {
+    if (tweets.length > 18) {
       // Remove first tweet
       tweets.shift().remove();
     }

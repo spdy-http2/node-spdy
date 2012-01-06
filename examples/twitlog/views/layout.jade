@@ -5,9 +5,11 @@ html
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    header(class='topbar')
+    header.topbar
       h1= title
-    section(id='content')
+    section#content
+      - if (notice)
+        section#notice= notice
       != body
     footer
       = 'Made using '

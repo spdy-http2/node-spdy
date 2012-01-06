@@ -15,18 +15,26 @@ header h1 {
 }
 
 footer {
+  width: 100%;
   height: 40px;
   margin-top: 0;
-  padding: 17px 16px 0 16px;
+  padding: 16px 16px 0 16px;
+  line-height: 24px;
+  position: fixed;
+  bottom: 0;
+  background: white;
 }
 
 section#content {
-  padding: 64px 32px 0 32px;
+  padding: 64px 32px;
+}
+
+section#notice {
+  font-size: 32px;
+  line-height: 48px;
 }
 
 section#tweets {
-  overflow: hidden;
-  height: 588px;
 }
 
 section#tweets article.tweet {
