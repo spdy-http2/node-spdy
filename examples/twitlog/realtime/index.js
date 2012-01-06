@@ -10,8 +10,8 @@ exports.init = function(io) {
   twitter.search('#spdytwitlog', function(err, result) {
     if (err) return console.error(err);
     result.results.sort(function(a, b) {
-      return (+new Date(b.created_at)) -
-             (+new Date(a.created_at));
+      return (+new Date(a.created_at)) -
+             (+new Date(b.created_at));
     }).forEach(receive);
   });
 
@@ -33,7 +33,7 @@ exports.init = function(io) {
       }
     });
   }
-  watchStream('statuses/filter', { track: '#twitlog' });
+  watchStream('statuses/filter', { track: '#spdytwitlog' });
 
   function receive(tweet) {
     tweet = {
