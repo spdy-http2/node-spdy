@@ -10,9 +10,9 @@ var fs = require('fs'),
     realtime = require('./realtime');
 
 var options = {
-  key: fs.readFileSync(__dirname + '/../../keys/spdy-key.pem'),
-  cert: fs.readFileSync(__dirname + '/../../keys/spdy-cert.pem'),
-  ca: fs.readFileSync(__dirname + '/../../keys/spdy-csr.pem'),
+  key: fs.readFileSync(__dirname + '/keys/twitlog-key.pem'),
+  cert: fs.readFileSync(__dirname + '/keys/twitlog-cert.pem'),
+  ca: fs.readFileSync(__dirname + '/keys/twitlog-csr.pem'),
 };
 
 var app = module.exports = spdy.createServer(express.HTTPSServer, options);
