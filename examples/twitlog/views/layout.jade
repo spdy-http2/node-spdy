@@ -1,0 +1,24 @@
+!!! 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    header(class='topbar')
+      h1= title
+    section(id='content')
+      != body
+    footer
+      = 'Made using '
+      a(href='http://nodejs.org/') node.js
+      = ', '
+      a(href='https://github.com/indutny/node-spdy') node-spdy
+      = ', '
+      a(href='http://socket.io/') socket.io
+      = ' and '
+      a(href='http://twitter.github.com/bootstrap/') twitter bootstrap
+
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/jquery-1.7.1.min.js')
+    script(src='/javascripts/main.js')
