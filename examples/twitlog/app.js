@@ -13,6 +13,7 @@ var options = {
   key: fs.readFileSync(__dirname + '/keys/twitlog-key.pem'),
   cert: fs.readFileSync(__dirname + '/keys/twitlog-cert.pem'),
   ca: fs.readFileSync(__dirname + '/keys/twitlog-csr.pem'),
+  ciphers: '!aNULL:!ADH:!eNull:!LOW:!EXP:RC4+RSA:MEDIUM:HIGH'
 };
 
 var app = module.exports = spdy.createServer(express.HTTPSServer, options);
