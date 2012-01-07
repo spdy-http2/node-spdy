@@ -7,7 +7,9 @@ suite('A Framer of SPDY module', function() {
   var connection;
 
   setup(function() {
-    connection = new spdy.server.Connection(new Stream());
+    var socket = new Stream();
+    socket.setTimeout = function() {};
+    connection = new spdy.server.Connection(socket);
   });
 
   /*
