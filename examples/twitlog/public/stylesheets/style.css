@@ -70,13 +70,13 @@ section#tweets article.tweet div.text-container div.text {
 section#tweets article.tweet div.text:before {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0px;
 
-  background: -webkit-linear-gradient(right, rgba(255, 255, 255, 1) 5%, rgba(255, 255, 255, 0) 50%);
-  background: -moz-linear-gradient(right, rgba(255, 255, 255, 1) 5%, rgba(255, 255, 255, 0) 50%);
-  background: linear-gradient(right, rgba(255, 255, 255, 1) 5%, rgba(255, 255, 255, 0) 50%);
+  background: -webkit-linear-gradient(right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: -moz-linear-gradient(right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
   content: '';
-  width: 100%;
+  width: 50px;
   height: 24px;
 }
 

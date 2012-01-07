@@ -7,13 +7,20 @@ var twitter = new (require('ntwitter'))({
 
 exports.init = function(io) {
   var tweets = [];
-  twitter.search('#spdytwitlog', function(err, result) {
-    if (err) return console.error(err);
-    result.results.sort(function(a, b) {
-      return (+new Date(a.created_at)) -
-             (+new Date(b.created_at));
-    }).forEach(receive);
-  });
+  twitter.search(
+    '#spdytwitlog',
+    {
+      result_type: 'recent',
+      include_entities: 1
+    },
+    function(err, result) {
+      if (err) return console.error(err);
+      result.results.sort(function(a, b) {
+        return (+new Date(a.created_at)) -
+               (+new Date(b.created_at));
+      }).forEach(receive);
+    }
+  );
 
   function watchStream(method, query) {
     twitter.stream(method, query, function(stream) {
@@ -33,9 +40,20 @@ exports.init = function(io) {
       }
     });
   }
-  watchStream('statuses/filter', { track: '#spdytwitlog' });
+
+  watchStream('statuses/filter', {
+    track: '#spdytwitlog',
+    include_entities: 1
+  });
 
   function receive(tweet) {
+    if (tweet.entities && tweet.entities.urls) {
+      tweet.entities.urls.forEach(function(url) {
+        tweet.text = tweet.text.slice(0, url.indices[0]) +
+                     url.display_url.link(url.expanded_url || url.url) +
+                     tweet.text.slice(url.indices[1]);
+      });
+    }
     tweet = {
       text: tweet.text,
       user: tweet.user ? {
