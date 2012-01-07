@@ -65,6 +65,15 @@ one indicates on which spdy stream are sitting request and response. Latter one
 is always true and can be checked to ensure that incoming request wasn't
 received by HTTPS callback.
 
+#### Options
+
+All options supported by
+[tls](http://nodejs.org/docs/latest/api/tls.html#tls.createServer) are working
+with node-spdy. In addition, `maxStreams` options is available. it allows you
+controlling [maximum concurrent streams][http://www.chromium.org/spdy/spdy-protocol/spdy-protocol-draft2#TOC-SETTINGS]
+protocol option (if client will start more streams than that limit, RST_STREAM
+will be sent for each additional stream).
+
 #### Contributors
 
 * [Fedor Indutny](https://github.com/indutny)
