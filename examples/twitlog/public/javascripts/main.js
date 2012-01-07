@@ -44,6 +44,7 @@
     } else {
       container.appendChild(elem);
     }
+    first = elem;
 
     return elem;
   };
