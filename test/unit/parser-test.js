@@ -3,24 +3,19 @@ var assert = require('assert'),
     Buffer = require('buffer').Buffer;
 
 suite('A Parser of SPDY module', function() {
-  var parser,
-      framer;
+  var parser;
 
   setup(function() {
-    parser = new spdy.parser.create();
-    framer = spdy.framer;
-    spdy.framer = {
-      execute: function(conn, header, data, callback) {
+    var inflate = spdy.utils.createInflate();
+
+    parser = new spdy.parser.create(inflate, {
+      execute: function(header, data, callback) {
         callback(null, {
           header: header,
           data: data
         });
       }
-    };
-  });
-
-  teardown(function() {
-    spdy.framer = framer;
+    });
   });
 
   test('should wait for headers initially', function() {

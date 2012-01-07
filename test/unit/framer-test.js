@@ -5,11 +5,13 @@ var assert = require('assert'),
 
 suite('A Framer of SPDY module', function() {
   var inflate,
-      deflate;
+      deflate,
+      framer;
 
   setup(function() {
     inflate = spdy.utils.createInflate();
     deflate = spdy.utils.createDeflate();
+    framer = spdy.framer.create(inflate, deflate);
   });
 
   /*
@@ -39,7 +41,7 @@ suite('A Framer of SPDY module', function() {
       0x6c, 0xc9, 0xa5, 0xc5, 0x25, 0xf9, 0xb9,
       0x0c, 0x8c, 0x86, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff
     ]);
-    spdy.framer.execute(inflate, {
+    framer.execute({
       control: true,
       type: 1,
       length: body.length
@@ -64,7 +66,7 @@ suite('A Framer of SPDY module', function() {
       0x6c, 0xc9, 0xa5, 0xc5, 0x25, 0xf9, 0xb9,
       0x0c, 0x8c, 0x86, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff
     ]);
-    spdy.framer.execute(inflate, {
+    framer.execute({
       control: true,
       type: 2,
       length: body.length
@@ -80,7 +82,7 @@ suite('A Framer of SPDY module', function() {
 
   test('given a RST_STREAM should return correct frame', function(done) {
     var body = new Buffer([0, 0, 0, 1, 0, 0, 0, 2]);
-    spdy.framer.execute(inflate, {
+    framer.execute({
       control: true,
       type: 3,
       length: body.length
@@ -94,7 +96,7 @@ suite('A Framer of SPDY module', function() {
   });
 
   test('given a NOOP frame should return correct frame', function(done) {
-    spdy.framer.execute(inflate, {
+    framer.execute({
       control: true,
       type: 5,
       length: 0
@@ -106,7 +108,7 @@ suite('A Framer of SPDY module', function() {
   });
 
   test('given a PING frame should return correct frame', function(done) {
-    spdy.framer.execute(inflate, {
+    framer.execute({
       control: true,
       type: 6,
       length: 0
@@ -119,7 +121,7 @@ suite('A Framer of SPDY module', function() {
 
   test('given a GOAWAY frame should return correct frame', function(done) {
     var body = new Buffer([0, 0, 0, 1]);
-    spdy.framer.execute(inflate, {
+    framer.execute({
       control: true,
       type: 7,
       length: body.length
