@@ -4,17 +4,17 @@ var assert = require('assert'),
     Stream = require('stream').Stream;
 
 suite('A Framer of SPDY module', function() {
-  var connection;
+  var inflate,
+      deflate;
 
   setup(function() {
-    var socket = new Stream();
-    socket.setTimeout = function() {};
-    connection = new spdy.server.Connection(socket);
+    inflate = spdy.utils.createInflate();
+    deflate = spdy.utils.createDeflate();
   });
 
   /*
-    connection.deflate.on('data', function(b) {console.log(b)});
-    connection.deflate.write(new Buffer([
+    deflate.on('data', function(b) {console.log(b)});
+    deflate.write(new Buffer([
       0x00, 0x02, // Number of name+value
       0, 0x04, // Name length
       0x68, 0x6f, 0x73, 0x74, // 'host'
@@ -25,7 +25,7 @@ suite('A Framer of SPDY module', function() {
       0, 0x1,
       0x31 // '1'
     ]));
-    connection.deflate.flush();
+    deflate.flush();
    */
 
   test('given a SYN_STREAM should return correct frame', function(done) {
@@ -39,7 +39,7 @@ suite('A Framer of SPDY module', function() {
       0x6c, 0xc9, 0xa5, 0xc5, 0x25, 0xf9, 0xb9,
       0x0c, 0x8c, 0x86, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff
     ]);
-    spdy.framer.execute(connection, {
+    spdy.framer.execute(inflate, {
       control: true,
       type: 1,
       length: body.length
@@ -64,7 +64,7 @@ suite('A Framer of SPDY module', function() {
       0x6c, 0xc9, 0xa5, 0xc5, 0x25, 0xf9, 0xb9,
       0x0c, 0x8c, 0x86, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff
     ]);
-    spdy.framer.execute(connection, {
+    spdy.framer.execute(inflate, {
       control: true,
       type: 2,
       length: body.length
@@ -80,7 +80,7 @@ suite('A Framer of SPDY module', function() {
 
   test('given a RST_STREAM should return correct frame', function(done) {
     var body = new Buffer([0, 0, 0, 1, 0, 0, 0, 2]);
-    spdy.framer.execute(connection, {
+    spdy.framer.execute(inflate, {
       control: true,
       type: 3,
       length: body.length
@@ -94,7 +94,7 @@ suite('A Framer of SPDY module', function() {
   });
 
   test('given a NOOP frame should return correct frame', function(done) {
-    spdy.framer.execute(connection, {
+    spdy.framer.execute(inflate, {
       control: true,
       type: 5,
       length: 0
@@ -106,7 +106,7 @@ suite('A Framer of SPDY module', function() {
   });
 
   test('given a PING frame should return correct frame', function(done) {
-    spdy.framer.execute(connection, {
+    spdy.framer.execute(inflate, {
       control: true,
       type: 6,
       length: 0
@@ -119,7 +119,7 @@ suite('A Framer of SPDY module', function() {
 
   test('given a GOAWAY frame should return correct frame', function(done) {
     var body = new Buffer([0, 0, 0, 1]);
-    spdy.framer.execute(connection, {
+    spdy.framer.execute(inflate, {
       control: true,
       type: 7,
       length: body.length
