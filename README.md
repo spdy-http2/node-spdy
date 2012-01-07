@@ -4,9 +4,6 @@ With this module you can create [SPDY](http://www.chromium.org/spdy) servers
 in node.js with natural http module interface and fallback to regular https
 (for browsers that doesn't support SPDY yet).
 
-It's using SSL's NPN feature that is available in node from 0.6.0 version, but
-requires you to build node with latest openssl.
-
 ## Node+OpenSSL building
 
 At the moment node-spdy requires zlib dictionary support, which will come to
