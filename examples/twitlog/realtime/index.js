@@ -48,7 +48,9 @@ exports.init = function(io) {
 
   function receive(tweet) {
     if (tweet.entities && tweet.entities.urls) {
-      tweet.entities.urls.forEach(function(url) {
+      tweet.entities.urls.sort(function(a, b) {
+        return b.indices[0] - a.indices[0];
+      }).forEach(function(url) {
         tweet.text = tweet.text.slice(0, url.indices[0]) +
                      url.display_url.link(url.expanded_url || url.url) +
                      tweet.text.slice(url.indices[1]);
