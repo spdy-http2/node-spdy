@@ -43,7 +43,7 @@ spdy.createServer(options, function(req, res) {
 spdy.listen(443);
 ```
 
-### API
+## API
 
 API is compatible with `http` and `https` module, but you can use another
 function as base class for SPDYServer. For example,
@@ -65,7 +65,7 @@ one indicates on which spdy stream are sitting request and response. Latter one
 is always true and can be checked to ensure that incoming request wasn't
 received by HTTPS callback.
 
-#### Options
+### Options
 
 All options supported by
 [tls](http://nodejs.org/docs/latest/api/tls.html#tls.createServer) are working
