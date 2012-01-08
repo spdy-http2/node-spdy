@@ -2,6 +2,8 @@ html, body {
   padding: 0;
   margin: 0;
   height: 100%;
+
+  background: white url(/images/nodejs.png) 50% 50% no-repeat;
 }
 
 header {
