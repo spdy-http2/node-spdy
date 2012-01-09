@@ -4,6 +4,7 @@
       tweets = [],
       first;
 
+  socket.emit('reqTweets');
   socket.on('tweet', function(tweet) {
     if (tweets.length > 18) {
       // Remove first tweet

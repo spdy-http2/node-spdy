@@ -74,8 +74,10 @@ exports.init = function(io) {
   };
 
   io.sockets.on('connection', function(socket) {
-    tweets.forEach(function(tweet) {
-      socket.emit('tweet', tweet);
+    socket.on('reqTweets', function() {
+      tweets.forEach(function(tweet) {
+        socket.emit('tweet', tweet);
+      });
     });
   });
 };
