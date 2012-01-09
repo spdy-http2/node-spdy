@@ -1,21 +1,15 @@
 var assert = require('assert'),
     spdy = require('../../'),
-    fs = require('fs'),
+    keys = require('../fixtures/keys'),
     https = require('https'),
     tls = require('tls'),request
     Buffer = require('buffer').Buffer;
 
-var keysDir = require('path').resolve(__dirname, '../../keys/'),
-    options = {
-      key: fs.readFileSync(keysDir + '/spdy-key.pem'),
-      cert: fs.readFileSync(keysDir + '/spdy-cert.pem'),
-      ca: fs.readFileSync(keysDir + '/spdy-csr.pem')
-    };
 
 suite('A SPDY Server', function() {
   var server;
   setup(function(done) {
-    server = spdy.createServer(options, function(req, res) {
+    server = spdy.createServer(keys, function(req, res) {
       res.end('ok');
     });
 
