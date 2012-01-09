@@ -145,15 +145,15 @@ suite('A Framer of SPDY module', function() {
     });
 
     test('.dataFrame() w/o fin should generate correct frame', function() {
-      var chunks = framer.dataFrame(1, false, new Buffer(123));
-      assert.equal(chunks[0][4], 0);
-      assert.equal(chunks.length, 2);
+      var frame = framer.dataFrame(1, false, new Buffer(123));
+      assert.equal(frame[4], 0);
+      assert.ok(frame.length > 8);
     });
 
     test('.dataFrame() with fin should generate correct frame', function() {
-      var chunks = framer.dataFrame(1, true, new Buffer(123));
-      assert.equal(chunks[0][4], 1);
-      assert.equal(chunks.length, 2);
+      var frame = framer.dataFrame(1, true, new Buffer(123));
+      assert.equal(frame[4], 1);
+      assert.ok(frame.length > 8);
     });
 
     test('.pingFrame() should generate correct frame', function() {
