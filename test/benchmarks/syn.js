@@ -9,7 +9,7 @@ var uri = require('url').parse(process.argv[2]),
 
 frames.createSynStream(host, url, function(syn_stream) {
   var start = +new Date,
-      num = 300;
+      num = 300000;
   batch(port, host, syn_stream, 200, num, function() {
     var end = +new Date;
     console.log('requests/sec : %d', 1000 * num / (end - start));
