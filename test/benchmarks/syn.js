@@ -1,6 +1,5 @@
 var tls = require('tls'),
-    frames = require('../fixtures/frames'),
-    keys = require('../fixtures/keys');
+    frames = require('../fixtures/frames');
 
 var uri = require('url').parse(process.argv[2]),
     host = uri.hostname,
@@ -10,7 +9,8 @@ var uri = require('url').parse(process.argv[2]),
 frames.createSynStream(host, url, function(syn_stream) {
   var start = +new Date,
       num = 300000;
-  batch(port, host, syn_stream, 200, num, function() {
+
+  batch(port, host, syn_stream, 50, num, function() {
     var end = +new Date;
     console.log('requests/sec : %d', 1000 * num / (end - start));
   });
@@ -39,6 +39,7 @@ function batch(port, host, data, parallel, num, callback) {
   function run(i) {
     left--;
     if (left < 0) return;
+
     request(port, host, data, function() {
       if (++done ===  num) return callback();
       run(i);
