@@ -45,6 +45,16 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
+app.get('/push', function(req, res) {
+  var headers = {
+    'content-type': 'text/plain'
+  };
+  res.push('/xyz', headers, function(err, stream) {
+    stream.on('error', function() {
+    });
+  });
+  res.end('heya!');
+});
 
 // Socket.io
 
