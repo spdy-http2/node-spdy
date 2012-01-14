@@ -65,6 +65,32 @@ one indicates on which spdy stream are sitting request and response. Latter one
 is always true and can be checked to ensure that incoming request wasn't
 received by HTTPS callback.
 
+### Push streams
+
+It's possible to initiate 'push' stream to send content to client, before one'll
+request it.
+
+```javascript
+spdy.createServer(options, function(req, res) {
+  var headers = { 'content-type': 'application/javascript' };
+  res.send('/main.js', headers, function(err, stream) {
+    if (err) return;
+
+    stream.end('alert("hello from push stream!");');
+  });
+
+  res.end('<script src="/main.js"></script>');
+}).listen(443);
+```
+
+`.push('full or relative url', { ... headers ... }, callback)`
+
+You can use either full ( `http://host/path` ) or relative ( `/path` ) urls with
+`.push()`. `headers` are the same as for regular response object. `callback`
+will receive two arguments: `err` (if any error is happened) and `stream`
+(stream object have API compatible with a
+[net.Socket](http://nodejs.org/docs/latest/api/net.html#net.Socket) ).
+
 ### Options
 
 All options supported by
