@@ -144,6 +144,14 @@ suite('A Framer of SPDY module', function() {
       });
     });
 
+    test('.streamFrame() should generate correct frame', function(done) {
+      framer.streamFrame(2, 1, { url : '/' }, {}, function(err, chunks) {
+        assert.equal(err, null);
+        assert.ok(chunks.length > 1);
+        done();
+      });
+    });
+
     test('.dataFrame() w/o fin should generate correct frame', function() {
       var frame = framer.dataFrame(1, false, new Buffer(123));
       assert.equal(frame[4], 0);
