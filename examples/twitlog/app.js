@@ -52,6 +52,7 @@ app.get('/push', function(req, res) {
   res.push('/xyz', headers, function(err, stream) {
     stream.on('error', function() {
     });
+    stream.end('hello!');
   });
   res.end('heya!');
 });
