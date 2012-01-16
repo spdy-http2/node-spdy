@@ -1,1 +1,7 @@
 node_modules
+/*.Makefile
+/Makefile
+/*.xcodeproj
+/*.target.mk
+/gyp-mac-tool
+/out
