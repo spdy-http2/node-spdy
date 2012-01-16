@@ -6,16 +6,10 @@ suite('A Parser of SPDY module', function() {
   var parser;
 
   setup(function() {
-    var inflate = spdy.utils.createInflate();
+    var deflate = spdy.utils.createDeflate(),
+        inflate = spdy.utils.createInflate();
 
-    parser = new spdy.parser.create(inflate, {
-      execute: function(header, data, callback) {
-        callback(null, {
-          header: header,
-          data: data
-        });
-      }
-    });
+    parser = new spdy.parser.create(deflate, inflate);
   });
 
   test('should wait for headers initially', function() {
@@ -74,9 +68,8 @@ suite('A Parser of SPDY module', function() {
 
   test('given header and body should emit `frame`', function(done) {
     parser.on('frame', function(frame) {
-      assert.ok(!frame.header.control);
-      assert.equal(frame.header.id, 1);
-      assert.equal(frame.header.length, 4);
+      assert.ok(frame.type === 'DATA');
+      assert.equal(frame.id, 1);
       assert.equal(frame.data.length, 4);
       assert.equal(frame.data[0], 0x01);
       assert.equal(frame.data[1], 0x02);
