@@ -1,5 +1,5 @@
 {
-  "name": "spdy-bindist",
+  "name": "spdy",
   "version": "1.2.0",
   "description": "Implementation of the SPDY protocol on node.js.",
   "keywords": [
@@ -29,6 +29,5 @@
   "engines": [
     "node ~ 0.7.0"
   ],
-  "main": "./lib/spdy",
-  "bindist": "0.7.0-darwin-ia32"
+  "main": "./lib/spdy"
 }
