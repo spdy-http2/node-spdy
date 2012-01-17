@@ -21,7 +21,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "mocha": "0.10.x"
+    "mocha": "~ 0.10.1"
   },
   "scripts": {
     "test": "mocha --ui tdd --growl --reporter spec test/unit/*-test.js"
