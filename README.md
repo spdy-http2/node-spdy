@@ -1,4 +1,4 @@
-# SPDY Server for node.js
+# SPDY Server for node.js [![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
 
 With this module you can create [SPDY](http://www.chromium.org/spdy) servers
 in node.js with natural http module interface and fallback to regular https
@@ -105,11 +105,6 @@ will be sent for each additional stream).
 * [Fedor Indutny](https://github.com/indutny)
 * [Chris Storm](https://github.com/eee-c)
 * [François de Metz](https://github.com/francois2metz)
-
-### CI
-
-Travis doesn't support latest node.js yet, that's why build is failing right now
-[![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
 
 #### LICENSE
 
