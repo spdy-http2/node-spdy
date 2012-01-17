@@ -5,3 +5,7 @@ node_modules
 /*.target.mk
 /gyp-mac-tool
 /out
+/build
+.lock-wscript
+npm-debug.log
+*.node

@@ -1,4 +1,5 @@
 import Options
+from node_addon import node_addon_shlib_ext
 from os.path import exists
 from shutil import copy2 as copy
 
@@ -19,8 +20,6 @@ def build_task(bld, name, source):
   else:
     obj.cxxflags = ["-g", "-D_LARGEFILE_SOURCE", "-Wall"]
 
-  print obj.env['DEST_CPU']
-
   obj.target = name
   obj.source = source
   obj.includes = "src/"
@@ -40,7 +39,7 @@ def copy_built(target):
   if exists(built):
     copy(built, dest)
 
-def shutdown():
+def shutdown(context):
   if Options.commands['clean']:
     unlink_target('generic')
     unlink_target('v2')
