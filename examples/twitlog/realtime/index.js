@@ -52,7 +52,7 @@ exports.init = function(io) {
         return b.indices[0] - a.indices[0];
       }).forEach(function(url) {
         tweet.text = tweet.text.slice(0, url.indices[0]) +
-                     url.display_url.link(url.expanded_url || url.url) +
+                     (url.display_url || '').link(url.expanded_url || url.url) +
                      tweet.text.slice(url.indices[1]);
       });
     }

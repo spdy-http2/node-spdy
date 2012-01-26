@@ -56,9 +56,3 @@ console.log(
   app.address().port,
   app.settings.env
 );
-
-// Do not fail on exceptions
-
-process.on('uncaughtException', function(err) {
-  console.error(err.stack);
-});
