@@ -6,7 +6,7 @@ var fs = require('fs');
 
 var image = fs.readFileSync(__dirname + '/../public/images/nodejs.png');
 
-exports.index = function(req, res){
+exports.index = function(req, res) {
   if (res.isSpdy) {
     var ua = req.headers['user-agent'];
 
