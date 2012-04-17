@@ -27,7 +27,8 @@ echo 'export PATH=$HOME/.node/dev/bin:$PATH' >> ~/.bashrc
 ## Usage
 
 ```javascript
-var spdy = require('spdy');
+var spdy = require('spdy'),
+    fs = require('fs');
 
 var options = {
   key: fs.readFileSync(__dirname + '/keys/spdy-key.pem'),
@@ -35,12 +36,12 @@ var options = {
   ca: fs.readFileSync(__dirname + '/keys/spdy-csr.pem')
 };
 
-spdy.createServer(options, function(req, res) {
+var server = spdy.createServer(options, function(req, res) {
   res.writeHead(200);
   res.end('hello world!');
 });
 
-spdy.listen(443);
+server.listen(443);
 ```
 
 ## API
@@ -103,7 +104,7 @@ will be sent for each additional stream).
 #### Contributors
 
 * [Fedor Indutny](https://github.com/indutny)
-* [Chris Storm](https://github.com/eee-c)
+* [Chris Strom](https://github.com/eee-c)
 * [François de Metz](https://github.com/francois2metz)
 
 #### LICENSE
