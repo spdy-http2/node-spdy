@@ -68,13 +68,12 @@ received by HTTPS callback.
 
 ### Push streams
 
-It's possible to initiate 'push' stream to send content to client, before one'll
-request it.
+It is possible to initiate 'push' streams to send content to clients _before_ the client requests it.
 
 ```javascript
 spdy.createServer(options, function(req, res) {
   var headers = { 'content-type': 'application/javascript' };
-  res.send('/main.js', headers, function(err, stream) {
+  res.push('/main.js', headers, function(err, stream) {
     if (err) return;
 
     stream.end('alert("hello from push stream!");');
@@ -83,6 +82,8 @@ spdy.createServer(options, function(req, res) {
   res.end('<script src="/main.js"></script>');
 }).listen(443);
 ```
+
+Push is accomplished via the `push()` method invoked on the current response object (this works for express.js response objects as well).  The format of the `push()` method is:
 
 `.push('full or relative url', { ... headers ... }, callback)`
 
