@@ -107,6 +107,7 @@ will be sent for each additional stream).
 * [Fedor Indutny](https://github.com/indutny)
 * [Chris Strom](https://github.com/eee-c)
 * [François de Metz](https://github.com/francois2metz)
+* [Tatsuhiro Tsujikawa](https://github.com/tatsuhiro-t)
 
 #### LICENSE
 
