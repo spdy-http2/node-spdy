@@ -89,6 +89,7 @@ will be sent for each additional stream).
 * [François de Metz](https://github.com/francois2metz)
 * [Ilya Grigorik](https://github.com/igrigorik)
 * [Roberto Peon](https://github.com/grmocg)
+* [Tatsuhiro Tsujikawa](https://github.com/tatsuhiro-t)
 
 #### LICENSE
 
