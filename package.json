@@ -1,6 +1,6 @@
 {
   "name": "spdy",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Implementation of the SPDY protocol on node.js.",
   "keywords": [
     "spdy"
@@ -29,5 +29,6 @@
   "engines": [
     "node >= 0.7.0"
   ],
-  "main": "./lib/spdy"
+  "main": "./lib/spdy",
+  "optionalDependencies": {}
 }
