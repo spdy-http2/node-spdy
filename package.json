@@ -21,13 +21,13 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "mocha": "~ 0.10.1"
+    "mocha": "1.2.x"
   },
   "scripts": {
     "test": "mocha --ui tdd --growl --reporter spec test/unit/*-test.js"
   },
   "engines": [
-    "node ~ 0.7.0"
+    "node >= 0.7.0"
   ],
   "main": "./lib/spdy"
 }
