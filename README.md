@@ -4,26 +4,6 @@ With this module you can create [SPDY](http://www.chromium.org/spdy) servers
 in node.js with natural http module interface and fallback to regular https
 (for browsers that doesn't support SPDY yet).
 
-## Node+OpenSSL building
-
-At the moment node-spdy requires zlib dictionary support, which will come to
-node.js only in 0.7.x version. To build 0.7.x version follow instructions below:
-
-```bash
-git clone git://github.com/joyent/node.git
-cd node
-./configure --prefix=$HOME/.node/dev # <- or any other dir
-
-make install -j4 # in -jN, N is number of CPU cores on your machine
-
-# Add node's bin to PATH env variable
-echo 'export PATH=$HOME/.node/dev/bin:$PATH' >> ~/.bashrc
-
-#
-# You have working node 0.7.x + NPN now !!!
-#
-```
-
 ## Usage
 
 ```javascript
