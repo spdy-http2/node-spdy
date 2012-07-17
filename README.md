@@ -88,6 +88,7 @@ will be sent for each additional stream).
 * [Chris Strom](https://github.com/eee-c)
 * [François de Metz](https://github.com/francois2metz)
 * [Ilya Grigorik](https://github.com/igrigorik)
+* [Roberto Peon](https://github.com/grmocg)
 
 #### LICENSE
 
