@@ -39,7 +39,7 @@ suite('A SPDY Server', function() {
       'localhost',
       { NPNProtocols: ['spdy/2'] },
       function() {
-        var deflate = spdy.utils.createDeflate(),
+        var deflate = spdy.utils.createDeflate(2),
             chunks = [],
             length = 0;
 

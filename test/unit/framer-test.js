@@ -9,12 +9,8 @@ suite('A Framer of SPDY module', function() {
       framer;
 
   setup(function() {
-    inflate = spdy.utils.zwrap(spdy.utils.createInflate(
-      spdy.protocol[2].dictionary
-    ));
-    deflate = spdy.utils.zwrap(spdy.utils.createDeflate(
-      spdy.protocol[2].dictionary
-    ));
+    inflate = spdy.utils.zwrap(spdy.utils.createInflate(2));
+    deflate = spdy.utils.zwrap(spdy.utils.createDeflate(2));
     framer = new spdy.protocol[2].Framer(deflate, inflate);
   });
 
