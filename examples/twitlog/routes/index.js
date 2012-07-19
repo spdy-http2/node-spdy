@@ -29,7 +29,7 @@ exports.index = function(req, res) {
   res.render('index', {
     title: 'SPDY - Twitlog',
     notice: req.isSpdy ?
-      'Yay! This page was requested via SPDY protocol'
+      'Yay! This page was requested via SPDY protocol v' + req.spdyVersion
       :
       'Oh, no... your browser requested this page via HTTPS'
   });
