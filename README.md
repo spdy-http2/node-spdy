@@ -24,27 +24,45 @@ var server = spdy.createServer(options, function(req, res) {
 server.listen(443);
 ```
 
+And by popular demand - usage with
+[express](https://github.com/visionmedia/express):
+
+```javascript
+var spdy = require('spdy'),
+    express = require('express'),
+    fs = require('fs');
+
+var options = { /* the same as above */ };
+
+var app = express();
+
+app.use(/* your favorite middleware */);
+
+var server = spdy.createServer(options, app);
+
+server.listen(443);
+```
+
 ## API
 
 API is compatible with `http` and `https` module, but you can use another
-function as base class for SPDYServer. For example,
-`require('express').HTTPSServer` given that as base class you'll get a server
-compatible with [express](https://github.com/visionmedia/express) API.
+function as base class for SPDYServer.
 
 ```javascript
 spdy.createServer(
-  [base class constructor, i.e. https.Server or express.HTTPSServer],
+  [base class constructor, i.e. https.Server],
   { /* keys and options */ }, // <- the only one required argument
   [request listener]
 ).listen([port], [host], [callback]);
 ```
 
 Request listener will receive two arguments: `request` and `response`. They're
-both instances of `http`'s `IncomingMessage` and `OutgoingMessage`. But two
-custom properties are added to both of them: `streamID` and `isSpdy`. The first
-one indicates on which spdy stream are sitting request and response. Latter one
-is always true and can be checked to ensure that incoming request wasn't
-received by HTTPS callback.
+both instances of `http`'s `IncomingMessage` and `OutgoingMessage`. But three
+custom properties are added to both of them: `streamID`, `isSpdy`,
+`spdyVersion`. The first one indicates on which spdy stream are sitting request
+and response. Second is always true and can be checked to ensure that incoming
+request wasn't received by HTTPS fallback and last one is a number representing
+used SPDY protocol version (2 or 3 for now).
 
 ### Push streams
 
