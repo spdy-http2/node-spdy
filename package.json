@@ -18,6 +18,10 @@
   "contributors": [
     "Chris Storm <github@eeecooks.com>",
     "François de Metz <francois@2metz.fr>"
+    "Ilya Grigorik <ilya@igvita.com>",
+    "Roberto Peon",
+    "Tatsuhiro Tsujikawa",
+    "Jesse Cravens <jesse.cravens@gmail.com>"
   ],
   "dependencies": {},
   "devDependencies": {

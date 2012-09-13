@@ -111,6 +111,7 @@ will be sent for each additional stream).
 * [Ilya Grigorik](https://github.com/igrigorik)
 * [Roberto Peon](https://github.com/grmocg)
 * [Tatsuhiro Tsujikawa](https://github.com/tatsuhiro-t)
+* [Jesse Cravens](https://github.com/jessecravens)
 
 #### LICENSE
 
