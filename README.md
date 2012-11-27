@@ -103,6 +103,12 @@ controlling [maximum concurrent streams][http://www.chromium.org/spdy/spdy-proto
 protocol option (if client will start more streams than that limit, RST_STREAM
 will be sent for each additional stream).
 
+Additional options:
+
+* `plain` - if defined, server will accept only plain (non-encrypted)
+  connections, `plain` should contain either `spdy/2` or `spdy/3`, depending
+  on the protocol.
+
 #### Contributors
 
 * [Fedor Indutny](https://github.com/indutny)
