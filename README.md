@@ -16,7 +16,10 @@ var spdy = require('spdy'),
 var options = {
   key: fs.readFileSync(__dirname + '/keys/spdy-key.pem'),
   cert: fs.readFileSync(__dirname + '/keys/spdy-cert.pem'),
-  ca: fs.readFileSync(__dirname + '/keys/spdy-csr.pem')
+  ca: fs.readFileSync(__dirname + '/keys/spdy-csr.pem'),
+
+  // SPDY-specific options
+  windowSize: 1024, // Server's window size
 };
 
 var server = spdy.createServer(options, function(req, res) {
