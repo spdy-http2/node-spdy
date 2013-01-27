@@ -72,7 +72,8 @@ used SPDY protocol version (2 or 3 for now).
 
 ### Push streams
 
-It is possible to initiate 'push' streams to send content to clients _before_ the client requests it.
+It is possible to initiate 'push' streams to send content to clients _before_
+the client requests it.
 
 ```javascript
 spdy.createServer(options, function(req, res) {
@@ -87,9 +88,11 @@ spdy.createServer(options, function(req, res) {
 }).listen(443);
 ```
 
-Push is accomplished via the `push()` method invoked on the current response object (this works for express.js response objects as well).  The format of the `push()` method is:
+Push is accomplished via the `push()` method invoked on the current response
+object (this works for express.js response objects as well).  The format of the
+`push()` method is:
 
-`.push('full or relative url', { ... headers ... }, callback)`
+`.push('full or relative url', { ... headers ... }, optional priority, callback)`
 
 You can use either full ( `http://host/path` ) or relative ( `/path` ) urls with
 `.push()`. `headers` are the same as for regular response object. `callback`
