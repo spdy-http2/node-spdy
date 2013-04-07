@@ -112,8 +112,7 @@ will be sent for each additional stream).
 Additional options:
 
 * `plain` - if defined, server will accept only plain (non-encrypted)
-  connections, `plain` should contain either `spdy/2` or `spdy/3`, depending
-  on the protocol.
+  connections.
 
 #### Contributors
 
