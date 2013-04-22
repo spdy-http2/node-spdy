@@ -9,9 +9,16 @@ var options = {
 
 var server = spdy.createServer(options, function(req, response) {
   response.writeHead(200, {
-    "Content-Type": "text/plain"
+    "Content-Type": "text/html"
   });
-  response.end("Hello World!\n");
+
+  response.push('/1.js', {}, 0, function(err, strm) {
+    if (err) throw err;
+
+    strm.end('alert("hello world: ' + req.spdyVersion+ '")');
+
+    response.end("<script src='/1.js'></script><b>hello world</b>\n");
+  });
 });
 
 server.listen(3232);
