@@ -1,6 +1,6 @@
 {
   "name": "spdy",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "description": "Implementation of the SPDY protocol on node.js.",
   "keywords": [
     "spdy"
