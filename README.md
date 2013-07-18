@@ -5,7 +5,7 @@
 
 With this module you can create [SPDY](http://www.chromium.org/spdy) servers
 in node.js with natural http module interface and fallback to regular https
-(for browsers that doesn't support SPDY yet).
+(for browsers that don't support SPDY yet).
 
 ## Usage
 
