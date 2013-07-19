@@ -105,7 +105,7 @@ will receive two arguments: `err` (if any error is happened) and `stream`
 All options supported by
 [tls](http://nodejs.org/docs/latest/api/tls.html#tls.createServer) are working
 with node-spdy. In addition, `maxStreams` options is available. it allows you
-controlling [maximum concurrent streams][http://www.chromium.org/spdy/spdy-protocol/spdy-protocol-draft2#TOC-SETTINGS]
+controlling [maximum concurrent streams](http://www.chromium.org/spdy/spdy-protocol/spdy-protocol-draft2#TOC-SETTINGS)
 protocol option (if client will start more streams than that limit, RST_STREAM
 will be sent for each additional stream).
 
