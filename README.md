@@ -115,6 +115,10 @@ Additional options:
   spdy or plain http by looking at first data packet.
 * `ssl` - if `false` and `options.plain` is `true`, `http.Server` will be used
   as a `base` class for created server.
+* `maxChunk` - if set and non-falsy, limits number of bytes sent in one DATA
+  chunk. Setting it to non-zero value is recommended if you care about
+  interleaving of outgoing data from multiple different streams.
+  (defaults to 8192)
 
 #### Contributors
 
