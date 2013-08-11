@@ -5,8 +5,7 @@ var Buffer = require('buffer').Buffer;
 var options = {
   key: fs.readFileSync('keys/spdy-key.pem'),
   cert: fs.readFileSync('keys/spdy-cert.pem'),
-  ca: fs.readFileSync('keys/spdy-csr.pem'),
-  maxChunk: 1024
+  ca: fs.readFileSync('keys/spdy-csr.pem')
 };
 
 var big = new Buffer(16 * 1024);
@@ -37,7 +36,7 @@ var server = spdy.createServer(options, function(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/plain"
   });
-  res.end(big);
+  res.end('ok good');
 });
 
 server.listen(3232, function() {
