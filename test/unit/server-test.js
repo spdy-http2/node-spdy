@@ -16,22 +16,25 @@ suite('A SPDY Server', function() {
   });
 
   teardown(function(done) {
-    server.once('close', done);
-    server.close();
+    server.close(done);
   });
 
   test('should respond on regular https requests', function(done) {
-    https.request({
-      host: 'localhost',
+    var req = https.request({
+      host: '127.0.0.1',
       port: 8081,
       path: '/',
       method: 'GET',
       agent: false,
       rejectUnauthorized: false
     }, function(res) {
+      res.on('data', function() {
+        // Ignore incoming data
+      });
       assert.equal(res.statusCode, 200);
       done();
-    }).end();
+    });
+    req.end();
   });
 
   test('should respond on spdy requests', function(done) {
