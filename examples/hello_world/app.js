@@ -29,9 +29,10 @@ var server = spdy.createServer(options, function(req, res) {
     stream.on('error', function(err) {
       console.error('Push error', err);
     });
-    stream.end(big, function() {
+    stream.write(big, function() {
       console.error('Push done');
     });
+    stream.end();
   });
   res.writeHead(200, {
     "Content-Type": "text/plain"
