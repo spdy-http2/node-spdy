@@ -100,6 +100,10 @@ will receive two arguments: `err` (if any error is happened) and `stream`
 (stream object have API compatible with a
 [net.Socket](http://nodejs.org/docs/latest/api/net.html#net.Socket) ).
 
+NOTE: You're responsible for the `stream` object once given it in `.push()`
+callback. Hence ignoring `error` events on it might result in uncaught
+exceptions and crash your program.
+
 ### Options
 
 All options supported by
