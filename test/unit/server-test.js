@@ -92,7 +92,7 @@ suite('A SPDY Server', function() {
           });
         });
 
-        var response = new Buffer(65),
+        var response = new Buffer(85),
             offset = 0;
 
         socket.on('data', function(chunk) {
@@ -101,7 +101,7 @@ suite('A SPDY Server', function() {
           chunk.copy(response, offset);
           offset += chunk.length;
 
-          if (offset === 65) {
+          if (offset === 85) {
             var frames = [];
 
             offset = 0;
