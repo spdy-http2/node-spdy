@@ -92,7 +92,7 @@ suite('A SPDY Server', function() {
           });
         });
 
-        var response = new Buffer(85),
+        var response = new Buffer(65),
             offset = 0;
 
         socket.on('data', function(chunk) {
