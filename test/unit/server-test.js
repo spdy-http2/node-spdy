@@ -101,7 +101,7 @@ suite('A SPDY Server', function() {
           chunk.copy(response, offset);
           offset += chunk.length;
 
-          if (offset === 85) {
+          if (offset === 65) {
             var frames = [];
 
             offset = 0;
