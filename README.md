@@ -9,6 +9,7 @@ in node.js with natural http module interface and fallback to regular https
 
 ## Usage
 
+Server:
 ```javascript
 var spdy = require('spdy'),
     fs = require('fs');
@@ -28,6 +29,29 @@ var server = spdy.createServer(options, function(req, res) {
 });
 
 server.listen(443);
+```
+
+Client:
+```javascript
+var spdy = require('spdy');
+var http = require('http');
+
+var agent = spdy.createAgent({
+  host: 'www.google.com',
+  port: 443
+});
+
+http.get({
+  host: 'www.google.com',
+  agent: agent
+}, function(response) {
+  console.log('yikes');
+  // Here it goes like with any other node.js HTTP request
+  // ...
+  // And once we're done - we may close TCP connection to server
+  // NOTE: All non-closed requests will die!
+  agent.close();
+}).end();
 ```
 
 And by popular demand - usage with
