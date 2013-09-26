@@ -19,11 +19,18 @@ suite('A SPDY Server / Stream', function() {
       pair.server = { req: req, res: res };
 
       // Just to remove junk from stream's buffer
-      req.once('readable', function() {
-        assert.equal(req.read().toString(), 'shame');
-        if (--waiting === 0)
-          done();
-      });
+      if (spdy.utils.isLegacy)
+        req.once('data', function(data) {
+          assert.equal(data.toString(), 'shame');
+          if (--waiting === 0)
+            done();
+        });
+      else
+        req.once('readable', function() {
+          assert.equal(req.read().toString(), 'shame');
+          if (--waiting === 0)
+            done();
+        });
 
       res.writeHead(200);
     });
@@ -70,13 +77,26 @@ suite('A SPDY Server / Stream', function() {
     var big = new Buffer(2 * 1024 * 1024);
     for (var i = 0; i < big.length; i++)
       big[i] = ~~(Math.random() * 256);
-    pair.client.res.on('readable', function() {
-      var bigEcho = pair.client.res.read(big.length);
-      if (bigEcho) {
-        assert.equal(big.toString('hex'), bigEcho.toString('hex'));
-        done();
-      }
-    });
+
+    var offset = 0;
+    if (spdy.utils.isLegacy)
+      pair.client.res.on('data', function(chunk) {
+        for (var i = 0; i < chunk.length; i++) {
+          assert(i + offset < big.length);
+          assert.equal(big[i + offset], chunk[i]);
+        }
+        offset += i;
+        if (offset === big.length)
+          done();
+      });
+    else
+      pair.client.res.on('readable', function() {
+        var bigEcho = pair.client.res.read(big.length);
+        if (bigEcho) {
+          assert.equal(big.toString('hex'), bigEcho.toString('hex'));
+          done();
+        }
+      });
 
     pair.server.req.pipe(pair.server.res);
     pair.client.req.end(big);
