@@ -6,7 +6,7 @@ var assert = require('assert'),
     Buffer = require('buffer').Buffer,
     PORT = 8081;
 
-suite('A SPDY Server', function() {
+suite('A SPDY Server / Connect', function() {
   var server;
   setup(function(done) {
     server = spdy.createServer(keys, function(req, res) {
