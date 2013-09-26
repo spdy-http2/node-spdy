@@ -16,7 +16,12 @@ suite('A SPDY Server', function() {
 
     server = spdy.createServer(keys, function(req, res) {
       pair.server = { req: req, res: res };
-      done();
+
+      // Just to remove junk from stream's buffer
+      req.once('readable', function() {
+        assert.equal(req.read().toString(), 'shame');
+        done();
+      });
     });
 
     server.listen(PORT, function() {
