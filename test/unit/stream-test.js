@@ -9,9 +9,15 @@ var assert = require('assert'),
 suite('A SPDY Server', function() {
   var server;
   var agent;
+  var pair = null;
 
   setup(function(done) {
-    server = spdy.createServer(keys);
+    pair = { server: null, client: null };
+
+    server = spdy.createServer(keys, function(req, res) {
+      pair.server = { req: req, res: res };
+      done();
+    });
 
     server.listen(PORT, function() {
       agent = spdy.createAgent({
@@ -19,11 +25,18 @@ suite('A SPDY Server', function() {
         port: PORT,
         rejectUnauthorized: false
       });
-      done();
+
+      pair.client = https.request({
+        path: '/',
+        method: 'POST',
+        agent: agent
+      });
+      pair.client.write('shame');
     });
   });
 
   teardown(function(done) {
+    pair = null;
     agent.close(function() {
       server.close(done);
     });
@@ -31,5 +44,9 @@ suite('A SPDY Server', function() {
 
   test('should support PING from client', function(done) {
     agent.ping(done);
+  });
+
+  test('should support PING from server', function(done) {
+    pair.server.res.socket.ping(done);
   });
 });
