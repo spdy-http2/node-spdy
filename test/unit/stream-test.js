@@ -101,4 +101,22 @@ suite('A SPDY Server / Stream', function() {
     pair.server.req.pipe(pair.server.res);
     pair.client.req.end(big);
   });
+
+  test('trailing headers from client', function(done) {
+    pair.server.req.connection.once('headers', function(headers) {
+      assert.equal(headers.wtf, 'yes');
+      assert.equal(pair.server.req.trailers.wtf, 'yes');
+      done();
+    });
+    pair.client.req.addTrailers({ wtf: 'yes' });
+  });
+
+  test('trailing headers from server', function(done) {
+    pair.client.req.connection.once('headers', function(headers) {
+      assert.equal(headers.wtf, 'yes');
+      assert.equal(pair.client.res.trailers.wtf, 'yes');
+      done();
+    });
+    pair.server.res.addTrailers({ wtf: 'yes' });
+  });
 });
