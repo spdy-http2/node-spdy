@@ -119,4 +119,21 @@ suite('A SPDY Server / Stream', function() {
     });
     pair.server.res.addTrailers({ wtf: 'yes' });
   });
+
+  test('push stream', function(done) {
+    agent.once('push', function(req) {
+      assert.equal(req.headers.wtf, 'true');
+      req.once('data', function(chunk) {
+        assert.equal(chunk.toString(), 'yes, wtf');
+        done();
+      });
+    });
+    pair.server.res.push('/wtf', { wtf: true }, function(err, stream) {
+      assert(!err);
+      stream.on('error', function(err) {
+        throw err;
+      });
+      stream.end('yes, wtf');
+    });
+  });
 });
