@@ -103,7 +103,7 @@ suite('A SPDY Server / Stream', function() {
   });
 
   test('trailing headers from client', function(done) {
-    pair.server.req.connection.once('headers', function(headers) {
+    pair.server.req.once('trailers', function(headers) {
       assert.equal(headers.wtf, 'yes');
       assert.equal(pair.server.req.trailers.wtf, 'yes');
       done();
@@ -112,7 +112,7 @@ suite('A SPDY Server / Stream', function() {
   });
 
   test('trailing headers from server', function(done) {
-    pair.client.req.connection.once('headers', function(headers) {
+    pair.client.res.once('trailers', function(headers) {
       assert.equal(headers.wtf, 'yes');
       assert.equal(pair.client.res.trailers.wtf, 'yes');
       done();

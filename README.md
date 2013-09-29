@@ -124,9 +124,50 @@ will receive two arguments: `err` (if any error is happened) and `stream`
 (stream object have API compatible with a
 [net.Socket](http://nodejs.org/docs/latest/api/net.html#net.Socket) ).
 
+Client usage:
+```javascript
+var agent = spdy.createAgent({ /* ... */ });
+agent.on('push', function(stream) {
+  stream.on('error', function(err) {
+    // Handle error
+  });
+  // Read data from stream
+  // ...
+  // stream.associated points to associated client-initiated stream
+});
+```
+
 NOTE: You're responsible for the `stream` object once given it in `.push()`
 callback. Hence ignoring `error` events on it might result in uncaught
 exceptions and crash your program.
+
+### Trailing headers
+
+Server usage:
+```javascript
+function (req, res) {
+  // Send trailing headers to client
+  res.addTrailers({ header1: 'value1', header2: 'value2' });
+
+  // On client's trailing headers
+  req.on('trailers', function(headers) {
+    // ...
+  });
+}
+```
+
+Client usage:
+```javascript
+var req = http.request({ agent: spdyAgent, /* ... */ }).function (res) {
+  // On server's trailing headers
+  res.on('trailers', function(headers) {
+    // ...
+  });
+});
+req.write('stuff');
+req.addTrailers({ /* ... */ });
+req.end();
+```
 
 ### Options
 
