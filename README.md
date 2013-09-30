@@ -102,11 +102,12 @@ the client requests it.
 ```javascript
 spdy.createServer(options, function(req, res) {
   var headers = { 'content-type': 'application/javascript' };
-  res.push('/main.js', headers, function(err, stream) {
-    if (err) return;
-
-    stream.end('alert("hello from push stream!");');
+  var stream = res.push('/main.js', headers);
+  stream.on('acknowledge', function() {
   });
+  stream.on('error', function() {
+  });
+  stream.end('alert("hello from push stream!");');
 
   res.end('<script src="/main.js"></script>');
 }).listen(443);
