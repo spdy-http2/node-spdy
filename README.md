@@ -38,7 +38,14 @@ var http = require('http');
 
 var agent = spdy.createAgent({
   host: 'www.google.com',
-  port: 443
+  port: 443,
+
+  // Optional SPDY options
+  spdy: {
+    plain: false or true,
+    ssl: false or true,
+    version: 3 // Will be used only when `plain` is `true`
+  }
 });
 
 http.get({
