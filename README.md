@@ -44,7 +44,7 @@ var agent = spdy.createAgent({
   spdy: {
     plain: false or true,
     ssl: false or true,
-    version: 3 // Will be used only when `plain` is `true`
+    version: 3 // Force SPDY version
   }
 });
 
