@@ -136,4 +136,47 @@ suite('A SPDY Server / Stream', function() {
       stream.end('yes, wtf');
     });
   });
+
+  test('push stream - big chunks', function(done) {
+    var count = 10;
+    var chunk = new Buffer(256 * 1024);
+    for (var i = 0; i < chunk.length; i++)
+      chunk[i] = ~~(Math.random() * 256);
+
+    agent.once('push', function(req) {
+      assert.equal(req.headers.wtf, 'true');
+      var offset = 0;
+      var total = 0;
+      req.on('data', function(data) {
+        for (var i = 0; i < data.length; i++) {
+          assert.equal(data[i],
+                       chunk[(offset + i) % chunk.length],
+                       'Mismatch at: ' + (offset + i));
+        }
+        offset = (offset + i) % chunk.length;
+        total += i;
+      });
+      req.once('end', function() {
+        assert.equal(total, count * chunk.length);
+        done();
+      });
+    });
+
+    pair.server.res.push('/wtf', { wtf: true }, function(err, stream) {
+      assert(!err);
+      stream.on('error', function(err) {
+        throw err;
+      });
+
+      function start(count) {
+        if (count === 1)
+          return stream.end(chunk);
+        stream.write(chunk);
+        setTimeout(function() {
+          start(count - 1);
+        }, 5);
+      }
+      start(count);
+    });
+  });
 });
