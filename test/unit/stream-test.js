@@ -139,7 +139,7 @@ suite('A SPDY Server / Stream', function() {
 
   test('push stream - big chunks', function(done) {
     var count = 10;
-    var chunk = new Buffer(256 * 1024);
+    var chunk = new Buffer(256 * 1024 - 7);
     for (var i = 0; i < chunk.length; i++)
       chunk[i] = ~~(Math.random() * 256);
 
