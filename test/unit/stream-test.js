@@ -137,8 +137,7 @@ suite('A SPDY Server / Stream', function() {
       done();
     });
 
-    // XXX(indutny): some parts of node are really f*cked
-    pair.client.req.socket.end('hello');
+    pair.client.req.end('hello');
   });
 
   test('trailing headers from client', function(done) {
