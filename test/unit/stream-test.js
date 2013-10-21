@@ -125,6 +125,22 @@ suite('A SPDY Server / Stream', function() {
     pair.client.req.socket.destroy();
   });
 
+  test('ending', function(done) {
+    var data = '';
+    pair.server.req.on('data', function(chunk) {
+      data += chunk;
+    });
+
+    pair.server.req.on('end', function() {
+      assert.equal(data, 'hello');
+      pair.server.res.end();
+      done();
+    });
+
+    // XXX(indutny): some parts of node are really f*cked
+    pair.client.req.socket.end('hello');
+  });
+
   test('trailing headers from client', function(done) {
     pair.server.req.once('trailers', function(headers) {
       assert.equal(headers.wtf, 'yes');
