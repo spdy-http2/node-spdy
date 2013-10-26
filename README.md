@@ -188,8 +188,8 @@ will be sent for each additional stream).
 
 Additional options:
 
-* `plain` - if defined, server will ignore NPN and ALPN data and choose whether to use
-  spdy or plain http by looking at first data packet.
+* `plain` - if defined, server will ignore NPN and ALPN data and choose whether
+  to use spdy or plain http by looking at first data packet.
 * `ssl` - if `false` and `options.plain` is `true`, `http.Server` will be used
   as a `base` class for created server.
 * `maxChunk` - if set and non-falsy, limits number of bytes sent in one DATA
