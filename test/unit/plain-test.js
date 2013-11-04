@@ -2,7 +2,7 @@ var assert = require('assert'),
     spdy = require('../../'),
     keys = require('../fixtures/keys'),
     http = require('http'),
-    tls = require('tls'),request
+    tls = require('tls'),
     Buffer = require('buffer').Buffer,
     PORT = 8081;
 

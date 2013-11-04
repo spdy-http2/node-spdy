@@ -2,7 +2,7 @@ var assert = require('assert'),
     spdy = require('../../'),
     keys = require('../fixtures/keys'),
     https = require('https'),
-    tls = require('tls'),request
+    tls = require('tls'),
     Buffer = require('buffer').Buffer,
     PORT = 8081;
 
@@ -93,7 +93,11 @@ suite('A SPDY Server / Stream', function() {
       pair.client.res.on('readable', function() {
         var bigEcho = pair.client.res.read(big.length);
         if (bigEcho) {
-          assert.equal(big.toString('hex'), bigEcho.toString('hex'));
+          assert.equal(big.length, bigEcho.length);
+          for (var i = 0; i < big.length; i += 256) {
+            assert.equal(big.slice(i, i + 256).toString('hex'),
+                         bigEcho.slice(i, i + 256).toString('hex'));
+          }
           done();
         }
       });
