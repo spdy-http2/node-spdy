@@ -1,4 +1,5 @@
 var assert = require('assert'),
+    zlib = require('zlib'),
     spdy = require('../../'),
     keys = require('../fixtures/keys'),
     https = require('https'),
@@ -176,6 +177,31 @@ suite('A SPDY Server / Stream', function() {
         throw err;
       });
       stream.end('yes, wtf');
+    });
+  });
+
+  test('push stream with compression', function(done) {
+    agent.once('push', function(req) {
+      req.once('data', function(chunk) {
+        assert.equal(chunk.toString(), 'yes, wtf');
+        done();
+      });
+    });
+    pair.server.res.push('/wtf', {
+      'Content-Encoding': 'gzip'
+    }, function(err, stream) {
+      assert(!err);
+      stream.on('error', function(err) {
+        throw err;
+      });
+      var gzip = zlib.createGzip();
+      gzip.on('data', function(data) {
+        stream.write(data);
+      });
+      gzip.on('end', function() {
+        stream.end();
+      });
+      gzip.end('yes, wtf');
     });
   });
 
