@@ -166,11 +166,17 @@ suite('A SPDY Server / Stream', function() {
   test('push stream', function(done) {
     agent.once('push', function(req) {
       assert.equal(req.headers.wtf, 'true');
+
+      var chunks = '';
       req.once('data', function(chunk) {
-        assert.equal(chunk.toString(), 'yes, wtf');
+        chunks += chunk;
+      });
+      req.once('end', function() {
+        assert.equal(chunks, 'yes, wtf');
         done();
       });
     });
+
     pair.server.res.push('/wtf', { wtf: true }, function(err, stream) {
       assert(!err);
       stream.on('error', function(err) {
