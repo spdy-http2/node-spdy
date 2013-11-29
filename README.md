@@ -19,8 +19,11 @@ var options = {
   cert: fs.readFileSync(__dirname + '/keys/spdy-cert.pem'),
   ca: fs.readFileSync(__dirname + '/keys/spdy-ca.pem'),
 
-  // SPDY-specific options
-  windowSize: 1024, // Server's window size
+  // **optional** SPDY-specific options
+  windowSize: 1024 * 1024, // Server's window size
+
+  // **optional** if true - server won't send 3.1 frames on 3.0 *plain* spdy
+  noSpdy31Update: false
 };
 
 var server = spdy.createServer(options, function(req, res) {
