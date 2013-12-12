@@ -253,4 +253,38 @@ suite('A SPDY Server / Stream', function() {
       start(count);
     });
   });
+
+  test('timing out', function(done) {
+    var data = '';
+
+    pair.server.req.socket.setTimeout(500);
+    pair.client.req.on('error', function() {
+      done();
+    });
+  });
+
+  test('timing out after write', function(done) {
+    var data = '';
+    var chunks = 0;
+
+    pair.server.req.socket.setTimeout(300);
+    setTimeout(function() {
+      pair.server.res.write('ok1');
+      setTimeout(function() {
+        pair.server.res.write('ok2');
+      }, 250);
+    }, 250);
+
+    pair.client.res.on('data', function(chunk) {
+      chunk = chunk.toString();
+      assert(chunks === 0 && chunk === 'ok1' ||
+             chunks === 1 && chunk === 'ok2');
+      chunks++;
+    });
+
+    pair.client.req.on('error', function() {
+      assert.equal(chunks, 2);
+      done();
+    });
+  });
 });
