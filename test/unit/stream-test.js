@@ -126,8 +126,33 @@ suite('A SPDY Server / Stream', function() {
       done();
     });
 
-    pair.client.req.write(big);
+    pair.client.req.write(big.slice(0, big.length >> 1));
+    pair.client.req.write(big.slice(big.length >> 1));
     pair.client.req.socket.destroy();
+  });
+
+  test('destroySoon in the middle', function(done) {
+    var big = new Buffer(2 * 1024 * 1024);
+    for (var i = 0; i < big.length; i++)
+      big[i] = ~~(Math.random() * 256);
+
+    var offset = 0;
+    pair.server.req.on('data', function(chunk) {
+      for (var i = 0; i < chunk.length; i++) {
+        assert(i + offset < big.length);
+        assert.equal(big[i + offset], chunk[i]);
+      }
+      offset += i;
+    });
+
+    pair.server.req.on('close', function() {
+      assert.equal(offset, big.length);
+      done();
+    });
+
+    pair.client.req.write(big.slice(0, big.length >> 1));
+    pair.client.req.write(big.slice(big.length >> 1));
+    pair.client.req.socket.destroySoon();
   });
 
   test('ending', function(done) {
