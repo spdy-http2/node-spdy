@@ -148,7 +148,7 @@ suite('A SPDY Server / Stream', function() {
       offset += i;
     });
 
-    pair.server.req.on('close', function() {
+    pair.server.req.on('end', function() {
       assert.equal(offset, big.length);
       done();
     });
