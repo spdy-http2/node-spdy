@@ -80,17 +80,15 @@ suite('A SPDY Server / Stream', function() {
       big[i] = ~~(Math.random() * 256);
 
     var offset = 0;
-    if (spdy.utils.isLegacy)
+    if (spdy.utils.isLegacy) {
       pair.client.res.on('data', function(chunk) {
         for (var i = 0; i < chunk.length; i++) {
           assert(i + offset < big.length);
           assert.equal(big[i + offset], chunk[i]);
         }
         offset += i;
-        if (offset === big.length)
-          done();
       });
-    else
+    } else {
       pair.client.res.on('readable', function() {
         var bigEcho = pair.client.res.read(big.length);
         if (bigEcho) {
@@ -99,9 +97,14 @@ suite('A SPDY Server / Stream', function() {
             assert.equal(big.slice(i, i + 256).toString('hex'),
                          bigEcho.slice(i, i + 256).toString('hex'));
           }
-          done();
+          offset += bigEcho.length;
         }
       });
+    }
+    pair.client.res.on('end', function() {
+      assert.equal(offset, big.length);
+      done();
+    });
 
     pair.server.req.pipe(pair.server.res);
     pair.client.req.end(big);
