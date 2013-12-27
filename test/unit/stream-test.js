@@ -26,6 +26,7 @@ suite('A SPDY Server / Stream', function() {
 
       server = spdy.createServer(util._extend(keys, options),
                                  function(req, res) {
+        assert.equal(req.method, 'POST');
         pair.server = { req: req, res: res };
 
         // Just to remove junk from stream's buffer
