@@ -63,4 +63,32 @@ suite('A SPDY Server / Plain', function() {
     });
     req.end();
   });
+
+  test('should handle header values with colons', function(done) {
+    var agent = spdy.createAgent({
+      host: '127.0.0.1',
+      port: PORT,
+      spdy: {
+        ssl: false,
+        plain: true
+      }
+    });
+
+    var refererValue = 'http://127.0.0.1:' + PORT + '/header-with-colon';
+
+    server.on('request', function(req) {
+      assert.equal(req.headers.referer, refererValue);
+    });
+
+    http.request({
+      path: '/',
+      method: 'GET',
+      agent: agent,
+      headers: { 'referer': refererValue }
+    }, function(res) {
+      assert.equal(res.statusCode, 200);
+      agent.close();
+      done();
+    }).end();
+  });
 });
