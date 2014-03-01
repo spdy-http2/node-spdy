@@ -91,4 +91,52 @@ suite('A SPDY Server / Plain', function() {
       done();
     }).end();
   });
+
+  test('should send date header as default', function(done) {
+    var agent = spdy.createAgent({
+      host: '127.0.0.1',
+      port: PORT,
+      spdy: {
+        ssl: false,
+        plain: true
+      }
+    });
+
+    http.request({
+      path: '/',
+      method: 'GET',
+      agent: agent
+    }, function(res) {
+      assert.equal(typeof res.headers.date, 'string');
+      agent.close();
+      done();
+    }).end();
+  });
+
+  test('should not send date header if res.sendDate is false', function(done) {
+    var agent = spdy.createAgent({
+      host: '127.0.0.1',
+      port: PORT,
+      spdy: {
+        ssl: false,
+        plain: true
+      }
+    });
+
+    server.removeAllListeners('request');
+    server.on('request', function(req, res) {
+      res.sendDate = false;
+      res.end('ok');
+    });
+
+    http.request({
+      path: '/',
+      method: 'GET',
+      agent: agent
+    }, function(res) {
+      assert.equal(typeof res.headers.date, 'undefined');
+      agent.close();
+      done();
+    }).end();
+  });
 });
