@@ -113,7 +113,7 @@ suite('A SPDY Server / Plain', function() {
     }).end();
   });
 
-  test('should not send date header if response.sendDate is false', function(done) {
+  test('should not send date header if res.sendDate is false', function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,
