@@ -292,6 +292,26 @@ suite('A SPDY Server / Stream', function() {
       });
     });
 
+    test('push stream - early close', function(done) {
+      agent.once('push', function(req) {
+        var chunks = '';
+        req.on('data', function(chunk) {
+          chunks += chunk;
+        });
+        req.once('end', function() {
+          assert.equal(chunks, 'yes, wtf');
+          done();
+        });
+      });
+      var stream = pair.server.res.push('/wtf', {});
+      pair.client.res.on('data', function() {});
+      pair.client.res.once('end', function() {
+        stream.end('yes, wtf');
+      });
+      pair.client.req.end();
+      pair.server.res.end();
+    });
+
     test('timing out', function(done) {
       var data = '';
 
