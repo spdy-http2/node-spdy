@@ -203,13 +203,19 @@ suite('A SPDY Server / Stream', function() {
 
     test('push stream', function(done) {
       agent.once('push', function(req) {
+        var gotTrailers = false;
         assert.equal(req.headers.wtf, 'true');
 
         var chunks = '';
         req.once('data', function(chunk) {
           chunks += chunk;
         });
+        req.once('trailers', function(trailers) {
+          assert.equal(trailers.ok, 'yes');
+          gotTrailers = true;
+        });
         req.once('end', function() {
+          assert(gotTrailers);
           assert.equal(req.trailers.ok, 'yes');
           assert.equal(chunks, 'yes, wtf');
           done();
