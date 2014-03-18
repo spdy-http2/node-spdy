@@ -210,6 +210,7 @@ suite('A SPDY Server / Stream', function() {
           chunks += chunk;
         });
         req.once('end', function() {
+          assert.equal(req.trailers.ok, 'yes');
           assert.equal(chunks, 'yes, wtf');
           done();
         });
@@ -220,6 +221,7 @@ suite('A SPDY Server / Stream', function() {
         stream.on('error', function(err) {
           throw err;
         });
+        stream.sendHeaders({ ok: 'yes' });
         stream.end('yes, wtf');
       });
     });
