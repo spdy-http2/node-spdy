@@ -90,4 +90,27 @@ suite('A SPDY Server / Connect', function() {
   spdyReqTest('/');
   spdyReqTest('/gzip');
   spdyReqTest('/deflate');
+
+  test('should not create RangeErrors on client errors', function(done) {
+    // https://github.com/indutny/node-spdy/issues/147
+    var agent = spdy.createAgent({
+      host: '127.0.0.1',
+      port: PORT,
+      rejectUnauthorized: true
+    }).on('error', function (err) {
+      assert(err.message === 'self signed certificate' ||
+        err.message === 'DEPTH_ZERO_SELF_SIGNED_CERT');
+    });
+
+    var req = https.request({
+      path: '/',
+      method: 'GET',
+      agent: agent
+    });
+    req.on('error', function (err) {
+      assert.equal(err.code, 'ECONNRESET');
+      done();
+    });
+    req.end();
+  });
 });
