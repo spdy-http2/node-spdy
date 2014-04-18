@@ -359,6 +359,7 @@ suite('A SPDY Server / Stream', function() {
       assert.equal(pair.server.req.spdyVersion, 3.1);
       assert(pair.server.req.streamID > 0);
 
+      pair.server.req.resume();
       pair.server.req.on('end', function() {
         pair.server.res.end();
         done();
