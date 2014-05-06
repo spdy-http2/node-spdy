@@ -1,5 +1,5 @@
 var assert = require('assert'),
-    http = require('http'),
+    https = require('https'),
     spdy = require('../../'),
     keys = require('../fixtures/keys'),
     net = require('net'),
@@ -43,7 +43,7 @@ suite('A SPDY server / Proxy', function() {
         agent: spdyAgent
       };
 
-      var req = http.request(options);
+      var req = https.request(options);
       req.end();
 
       req.on('connect', function(res, socket) {
