@@ -11,15 +11,28 @@ suite('A SPDY server / Proxy', function() {
     var agent;
     var proxyServer = spdy.createServer(keys);
     proxyServer.on('connect', function(req, socket) {
-      assert.equal(req.method, 'CONNECT');
-      assert(socket.isSpdy);
-      agent.close(function(){
-        proxyServer.close(done);
+      var srvUrl = url.parse('http://' + req.url);
+      var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, function() {
+        socket._lock(function() {
+          var headers = {
+            'Connection': 'keep-alive',
+            'Proxy-Agent': 'SPDY Proxy'
+          }
+          socket._spdyState.framer.replyFrame(
+            socket._spdyState.id, 200, "Connection Established", headers,
+            function (err, frame) {
+              socket.connection.write(frame);
+              socket._unlock();
+              srvSocket.pipe(socket);
+              socket.pipe(srvSocket);
+            }
+          );
+        });
       });
     });
 
     proxyServer.listen(PORT, '127.0.0.1', function() {
-      agent = spdy.createAgent({
+      spdyAgent = spdy.createAgent({
         host: '127.0.0.1',
         port: PORT,
         rejectUnauthorized: false
@@ -28,19 +41,29 @@ suite('A SPDY server / Proxy', function() {
       var options = {
         method: 'CONNECT',
         path: 'www.google.com:80',
-        agent: agent
+        agent: spdyAgent
       };
 
       var req = http.request(options);
       req.end();
 
-      req.on('error', function(err) {
-        // Tolerate this error here since I believe this is caused by the
-        //   incomplete handling of CONNECT requests on the client side,
-        //   and this is intended as a test of the server side.
-        if (err.code && err.code === 'ECONNRESET')
-          return;
-        throw err;
+      req.on('connect', function(res, socket) {
+        var googlePage = "";
+        req.socket.write('GET / HTTP/1.1\r\n' +
+                     'Host: www.google.com:80\r\n' +
+                     'Connection: close\r\n' +
+                     '\r\n');
+
+        socket.on('data', function(chunk) {
+          googlePage = googlePage + chunk.toString();
+        });
+
+        socket.on('end', function() {
+          assert.notEqual(googlePage.search('google'), -1);
+          spdyAgent.close(function() {
+            proxyServer.close(done);
+          });
+        });
       });
     });
   });
