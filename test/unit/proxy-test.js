@@ -48,7 +48,7 @@ suite('A SPDY server / Proxy', function() {
 
       req.on('connect', function(res, socket) {
         var googlePage = "";
-        req.socket.write('GET / HTTP/1.1\r\n' +
+        socket.write('GET / HTTP/1.1\r\n' +
                      'Host: www.google.com:80\r\n' +
                      'Connection: close\r\n' +
                      '\r\n');
@@ -58,7 +58,8 @@ suite('A SPDY server / Proxy', function() {
         });
 
         socket.on('end', function() {
-          assert.notEqual(googlePage.search('google'), -1);
+          assert.notEqual(googlePage.search('google'), -1, 
+            "Google page should contain string 'google'");
           spdyAgent.close(function() {
             proxyServer.close(done);
           });
