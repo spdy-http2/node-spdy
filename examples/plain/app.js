@@ -16,4 +16,7 @@ var server = spdy.createServer(options, function(req, response) {
   response.end("Hello World!\n");
 });
 
-server.listen(3232);
+server.listen(3232, function() {
+  var addr = this.address();
+  console.log('Server is listening on %s:%d', addr.address, addr.port);
+});
