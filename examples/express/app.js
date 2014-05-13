@@ -8,6 +8,7 @@ var express = require('express'),
     user = require('./routes/user'),
     fs = require('fs'),
     spdy = require('../..'),
+    https = require('https'),
     path = require('path');
 
 var app = express();
@@ -36,6 +37,6 @@ var options = {
   cert: fs.readFileSync('keys/spdy-cert.pem')
 };
 
-spdy.createServer(options, app).listen(app.get('port'), function(){
+https.createServer(options, app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
