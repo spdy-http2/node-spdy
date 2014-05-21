@@ -91,6 +91,30 @@ suite('A SPDY Server / Connect', function() {
   spdyReqTest('/gzip');
   spdyReqTest('/deflate');
 
+  test('should not fail at a lot of RSTs', function(done) {
+    var s = tls.connect({
+      host: '127.0.0.1',
+      port: PORT,
+      NPNProtocols: [ 'spdy/3' ],
+      rejectUnauthorized: false
+    }, function() {
+      var rst = new Buffer([
+        0x80, 0x03, 0x00, 0x03,
+        0x00, 0x00, 0x00, 0x08,
+        0x00, 0x00, 0x00, 0x02,
+        0x00, 0x00, 0x00, 0x00
+      ]);
+      var rsts = [];
+      for (var i = 0; i < 1000; i++)
+        rsts.push(rst);
+      rsts = Buffer.concat(rsts, rst.length * rsts.length);
+      s.write(rsts, function() {
+        s.destroy();
+        done();
+      });
+    });
+  });
+
   test('should not create RangeErrors on client errors', function(done) {
     // https://github.com/indutny/node-spdy/issues/147
     var agent = spdy.createAgent({
