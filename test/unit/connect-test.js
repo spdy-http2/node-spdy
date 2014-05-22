@@ -108,6 +108,8 @@ suite('A SPDY Server / Connect', function() {
       for (var i = 0; i < 1000; i++)
         rsts.push(rst);
       rsts = Buffer.concat(rsts, rst.length * rsts.length);
+      for (var i = 0; i < 10; i++)
+        s.write(rsts);
       s.write(rsts, function() {
         s.destroy();
         done();
