@@ -323,7 +323,7 @@ suite('A SPDY Server / Stream', function() {
     test('timing out', function(done) {
       var data = '';
 
-      pair.server.req.socket.setTimeout(500);
+      pair.server.req.socket.setTimeout(300);
       pair.client.req.on('error', function() {
         done();
       });
@@ -333,13 +333,13 @@ suite('A SPDY Server / Stream', function() {
       var data = '';
       var chunks = 0;
 
-      pair.server.req.socket.setTimeout(300);
+      pair.server.req.socket.setTimeout(150);
       setTimeout(function() {
         pair.server.res.write('ok1');
         setTimeout(function() {
           pair.server.res.write('ok2');
-        }, 250);
-      }, 250);
+        }, 100);
+      }, 100);
 
       pair.client.res.on('data', function(chunk) {
         chunk = chunk.toString();
