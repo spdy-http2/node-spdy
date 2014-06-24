@@ -117,6 +117,39 @@ suite('A SPDY Server / Connect', function() {
     });
   });
 
+  test('should not decompress stream when decompress is false', function(done) {
+      var agent = spdy.createAgent({
+        host: '127.0.0.1',
+        port: PORT,
+        rejectUnauthorized: false,
+        spdy: {
+          decompress: false
+        }
+      });
+
+      var req = https.request({
+        path: '/gzip',
+        method: 'GET',
+        agent: agent,
+      }, function(res) {
+        var received = [];
+        res.on('data', function(chunk) {
+          received.push(chunk);
+        });
+        res.once('end', function() {
+          agent.close();
+
+          zlib.gunzip(Buffer.concat(received), function(err, decompressed) {
+            assert.equal(decompressed, fox);
+            done();
+          });
+        });
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-encoding'], 'gzip');
+      });
+      req.end();
+  });
+
   test('should not create RangeErrors on client errors', function(done) {
     // https://github.com/indutny/node-spdy/issues/147
     var agent = spdy.createAgent({
