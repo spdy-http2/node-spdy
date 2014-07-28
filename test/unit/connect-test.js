@@ -17,6 +17,10 @@ suite('A SPDY Server / Connect', function() {
                  req.url === '/deflate' ? zlib.createDeflate() :
                  null;
 
+      // Terminate connection gracefully
+      if (req.url === '/goaway')
+        req.socket.connection.end();
+
       if (!comp)
         return res.end(fox);
 
@@ -171,5 +175,31 @@ suite('A SPDY Server / Connect', function() {
       done();
     });
     req.end();
+  });
+
+  test('should not support GOAWAY', function(done) {
+    // https://github.com/indutny/node-spdy/issues/147
+    var agent = spdy.createAgent({
+      host: '127.0.0.1',
+      port: PORT,
+      rejectUnauthorized: false
+    });
+
+    var total = '';
+    var req = https.request({
+      path: '/goaway',
+      method: 'GET',
+      agent: agent
+    }, function(res) {
+      res.on('data', function(chunk) {
+        total += chunk;
+      });
+    });
+    req.end();
+
+    agent._spdyState.socket.once('close', function() {
+      assert.equal(total, fox);
+      done();
+    });
   });
 });
