@@ -37,6 +37,6 @@ var options = {
   cert: fs.readFileSync('keys/spdy-cert.pem')
 };
 
-https.createServer(options, app).listen(app.get('port'), function(){
+spdy.createServer(options, app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
