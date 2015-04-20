@@ -210,8 +210,8 @@ suite('A SPDY Server / Connect', function() {
     });
   });
 
-  test('should add accept-encoding header to request headers, if none present',
-  function(done) {
+  test('should add accept-encoding header to request headers, \
+if none present', function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,
