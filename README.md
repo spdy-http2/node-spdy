@@ -130,7 +130,7 @@ var app = express();
 
 var server = spdy.createServer(options, app);
 
-app.get('*', function(req, res) {
+app.get('/', function(req, res) {
   var headers = { 'content-type': 'application/javascript' };
   res.push('/main.js', headers, function(err, stream) {
     stream.on('acknowledge', function() {
