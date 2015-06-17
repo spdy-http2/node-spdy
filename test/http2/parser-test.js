@@ -198,6 +198,16 @@ describe('HTTP2 Parser', function() {
       fail(second, 'PROTOCOL_ERROR', /no matching stream/i, done);
     });
 
+    it('should fail on way double END_HEADERS continuations', function(done) {
+      var hello = '40849cb4507f84f07b2893';
+      var how = '40839cfe3f871d8553d1edff3f';
+
+      var first = '00000b010000000001' + hello;
+      var second = '00000d090400000001' + how;
+
+      fail(first + second + second, 'PROTOCOL_ERROR', /no matching/i, done);
+    });
+
     it('should fail on way too many continuations', function(done) {
       var hello = '40849cb4507f84f07b2893';
       var how = '40839cfe3f871d8553d1edff3f';
@@ -208,6 +218,31 @@ describe('HTTP2 Parser', function() {
       var msg = first + new Array(20000).join(second);
 
       fail(msg, 'PROTOCOL_ERROR', /list is too large/i, done);
+    });
+  });
+
+  describe('RST_STREAM', function() {
+    it('should parse general frame', function(done) {
+      pass('0000040300000000010000000a', {
+        type: 'RST_STREAM',
+        id: 1,
+        status: 10
+      }, done);
+    });
+
+    it('should fail on 0-stream', function(done) {
+      fail('0000040300000000000000000a', 'PROTOCOL_ERROR', /stream id/i, done);
+    });
+
+    it('should fail on empty frame', function(done) {
+      fail('000000030000000001', 'FRAME_SIZE_ERROR', /length not 4/i, done);
+    });
+
+    it('should fail on bigger frame', function(done) {
+      fail('0000050300000000010102030405',
+           'FRAME_SIZE_ERROR',
+           /length not 4/i,
+           done);
     });
   });
 });
