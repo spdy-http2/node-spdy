@@ -32,10 +32,10 @@
   "devDependencies": {
     "jscs": "^1.13.1",
     "jshint": "^2.8.0",
-    "mocha": "1.3.x"
+    "mocha": "^2.2.5"
   },
   "scripts": {
-    "test": "mocha --reporter spec test/legacy/*-test.js test/http2/*-test.js"
+    "test": "mocha --reporter spec --timeout 100000 test/legacy/*-test.js test/http2/*-test.js"
   },
   "main": "./lib/spdy",
   "optionalDependencies": {}

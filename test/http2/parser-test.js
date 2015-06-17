@@ -19,6 +19,7 @@ describe('HTTP2 Parser', function() {
 
     parser.once('data', function(frame) {
       assert.deepEqual(frame, expected);
+      assert.equal(parser.buffer.size, 0);
       done();
     });
   }
@@ -243,6 +244,217 @@ describe('HTTP2 Parser', function() {
            'FRAME_SIZE_ERROR',
            /length not 4/i,
            done);
+    });
+  });
+
+  describe('DATA', function() {
+    it('should parse general frame', function(done) {
+      pass('000004000000000001abbadead', {
+        type: 'DATA',
+        id: 1,
+        fin: false,
+        data: new Buffer('abbadead', 'hex')
+      }, done);
+    });
+
+    it('should parse END_STREAM frame', function(done) {
+      pass('000004000100000001deadbeef', {
+        type: 'DATA',
+        id: 1,
+        fin: true,
+        data: new Buffer('deadbeef', 'hex')
+      }, done);
+    });
+
+    it('should parse padded frame', function(done) {
+      pass('0000070008000000010212345678ffff', {
+        type: 'DATA',
+        id: 1,
+        fin: false,
+        data: new Buffer('12345678', 'hex')
+      }, done);
+    });
+
+    it('should fail on incorrectly padded frame', function(done) {
+      fail('000007000800000001ff0000000affff',
+           'PROTOCOL_ERROR',
+           /padding size/i,
+           done);
+    });
+  });
+
+  describe('PUSH_PROMISE', function() {
+    it('should parse general frame', function(done) {
+      var hello = '40849cb4507f84f07b2893';
+
+      pass('00000f05040000000100000002' + hello, {
+        type: 'PUSH_PROMISE',
+        id: 1,
+        promisedId: 2,
+        headers: {
+          hello: 'world'
+        },
+        url: undefined
+      }, done);
+    });
+
+    it('should parse padded frame', function(done) {
+      var hello = '40849cb4507f84f07b2893';
+
+      pass('000011050c000000010100000002' + hello + 'ff', {
+        type: 'PUSH_PROMISE',
+        id: 1,
+        promisedId: 2,
+        headers: {
+          hello: 'world'
+        },
+        url: undefined
+      }, done);
+    });
+
+    it('should fail on incorreclty padded frame', function(done) {
+      var hello = '40849cb4507f84f07b2893';
+
+      fail('000011050c00000001ff00000002' + hello + 'ff',
+           'PROTOCOL_ERROR',
+           /padding size/i,
+           done);
+    });
+
+    it('should fail on empty frame', function(done) {
+      fail('000000050400000001', 'FRAME_SIZE_ERROR', /length less than/i, done);
+    });
+
+    it('should fail on 0-stream id', function(done) {
+      var hello = '40849cb4507f84f07b2893';
+
+      fail('00000f05040000000000000002' + hello,
+           'PROTOCOL_ERROR',
+           /stream id/i,
+           done);
+    });
+  });
+
+  describe('PING', function() {
+    it('should parse general frame', function(done) {
+      pass('0000080600000000000102030405060708', {
+        type: 'PING',
+        ack: false,
+        opaque: new Buffer('0102030405060708', 'hex')
+      }, done);
+    });
+
+    it('should parse ack frame', function(done) {
+      pass('0000080601000000000102030405060708', {
+        type: 'PING',
+        ack: true,
+        opaque: new Buffer('0102030405060708', 'hex')
+      }, done);
+    });
+
+    it('should fail on empty frame', function(done) {
+      fail('000000060100000000', 'FRAME_SIZE_ERROR', /length !=/i, done);
+    });
+
+    it('should fail too big frame', function(done) {
+      fail('000009060100000000010203040506070809',
+           'FRAME_SIZE_ERROR',
+           /length !=/i,
+           done);
+    });
+
+    it('should fail on non-zero stream id', function(done) {
+      fail('0000080601000000010102030405060708',
+           'PROTOCOL_ERROR',
+           /invalid stream id/i,
+           done);
+    });
+  });
+
+  describe('GOAWAY', function() {
+    it('should parse general frame', function(done) {
+      pass('0000080700000000000000000100000002', {
+        type: 'GOAWAY',
+        lastId: 1,
+        errorCode: 2,
+        debug: new Buffer(0)
+      }, done);
+    });
+
+    it('should parse frame with debug data', function(done) {
+      pass('00000a0700000000000000000100000002dead', {
+        type: 'GOAWAY',
+        lastId: 1,
+        errorCode: 2,
+        debug: new Buffer('dead', 'hex')
+      }, done);
+    });
+
+    it('should fail on empty frame', function(done) {
+      fail('000000070000000000', 'FRAME_SIZE_ERROR', /length < 8/i, done);
+    });
+
+    it('should fail on non-zero stream id', function(done) {
+      fail('0000080700000001000000000100000002',
+           'PROTOCOL_ERROR',
+           /invalid stream/i,
+           done);
+    });
+  });
+
+  describe('PRIORITY', function() {
+    it('should parse general frame', function(done) {
+      pass('00000502000000000100000002ab', {
+        type: 'PRIORITY',
+        id: 1,
+        exclusive: false,
+        dependency: 2,
+        weight: 0xab
+      }, done);
+    });
+
+    it('should parse exclusive frame', function(done) {
+      pass('00000502000000000180000002ab', {
+        type: 'PRIORITY',
+        id: 1,
+        exclusive: true,
+        dependency: 2,
+        weight: 0xab
+      }, done);
+    });
+
+    it('should fail on empty frame', function(done) {
+      fail('000000020000000001', 'FRAME_SIZE_ERROR', /length != 5/i, done);
+    });
+
+    it('should fail on too big frame', function(done) {
+      fail('000006020000000001010203040506',
+           'FRAME_SIZE_ERROR',
+           /length != 5/i,
+           done);
+    });
+
+    it('should fail on too big frame', function(done) {
+      fail('000006020000000001010203040506',
+           'FRAME_SIZE_ERROR',
+           /length != 5/i,
+           done);
+    });
+
+    it('should fail on zero stream id', function(done) {
+      fail('0000050200000000000102030405',
+           'PROTOCOL_ERROR',
+           /invalid stream id/i,
+           done);
+    });
+  });
+
+  describe('X_FORWARDED_FOR', function() {
+    it('should parse general frame', function(done) {
+      pass('000004de00000000006f686169', {
+        type: 'X_FORWARDED',
+        host: new Buffer('ohai')
+      }, done);
     });
   });
 });
