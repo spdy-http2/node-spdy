@@ -6,9 +6,9 @@ var assert = require('assert'),
     Buffer = require('buffer').Buffer,
     PORT = 8081;
 
-suite('A SPDY Server / Plain', function() {
+describe('A SPDY Server / Plain', function() {
   var server;
-  setup(function(done) {
+  beforeEach(function(done) {
     server = spdy.createServer({ plain: true, ssl: false }, function(req, res) {
       res.end('ok');
     });
@@ -16,11 +16,11 @@ suite('A SPDY Server / Plain', function() {
     server.listen(PORT, done);
   });
 
-  teardown(function(done) {
+  afterEach(function(done) {
     server.close(done);
   });
 
-  test('should respond on regular http requests', function(done) {
+  it('should respond on regular http requests', function(done) {
     var req = http.request({
       host: '127.0.0.1',
       port: PORT,
@@ -38,7 +38,7 @@ suite('A SPDY Server / Plain', function() {
     req.end();
   });
 
-  test('should respond on spdy requests', function(done) {
+  it('should respond on spdy requests', function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,
@@ -64,7 +64,7 @@ suite('A SPDY Server / Plain', function() {
     req.end();
   });
 
-  test('should handle header values with colons', function(done) {
+  it('should handle header values with colons', function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,
@@ -92,7 +92,7 @@ suite('A SPDY Server / Plain', function() {
     }).end();
   });
 
-  test('should send date header as default', function(done) {
+  it('should send date header as default', function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,
@@ -113,7 +113,7 @@ suite('A SPDY Server / Plain', function() {
     }).end();
   });
 
-  test('should not send date header if res.sendDate is false', function(done) {
+  it('should not send date header if res.sendDate is false', function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,

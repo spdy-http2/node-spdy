@@ -7,11 +7,11 @@ var assert = require('assert'),
     Buffer = require('buffer').Buffer,
     PORT = 8081;
 
-suite('A SPDY Server / Connect', function() {
+describe('A SPDY Server / Connect', function() {
   var server;
   var fox = 'The quick brown fox jumps over the lazy dog';
 
-  setup(function(done) {
+  beforeEach(function(done) {
     server = spdy.createServer(keys, function(req, res) {
       var comp = req.url === '/gzip' ? zlib.createGzip() :
                  req.url === '/deflate' ? zlib.createDeflate() :
@@ -44,11 +44,11 @@ suite('A SPDY Server / Connect', function() {
     server.listen(PORT, done);
   });
 
-  teardown(function(done) {
+  afterEach(function(done) {
     server.close(done);
   });
 
-  test('should respond on regular https requests', function(done) {
+  it('should respond on regular https requests', function(done) {
     var req = https.request({
       host: '127.0.0.1',
       port: PORT,
@@ -71,7 +71,7 @@ suite('A SPDY Server / Connect', function() {
   });
 
   function spdyReqTest(url) {
-    test('should respond on spdy requests on ' + url, function(done) {
+    it('should respond on spdy requests on ' + url, function(done) {
       var agent = spdy.createAgent({
         host: '127.0.0.1',
         port: PORT,
@@ -102,7 +102,7 @@ suite('A SPDY Server / Connect', function() {
   spdyReqTest('/gzip');
   spdyReqTest('/deflate');
 
-  test('should not fail at a lot of RSTs', function(done) {
+  it('should not fail at a lot of RSTs', function(done) {
     var s = tls.connect({
       host: '127.0.0.1',
       port: PORT,
@@ -128,7 +128,7 @@ suite('A SPDY Server / Connect', function() {
     });
   });
 
-  test('should not decompress stream when decompress is false', function(done) {
+  it('should not decompress stream when decompress is false', function(done) {
       var agent = spdy.createAgent({
         host: '127.0.0.1',
         port: PORT,
@@ -161,7 +161,7 @@ suite('A SPDY Server / Connect', function() {
       req.end();
   });
 
-  test('should not create RangeErrors on client errors', function(done) {
+  it('should not create RangeErrors on client errors', function(done) {
     // https://github.com/indutny/node-spdy/issues/147
     var agent = spdy.createAgent({
       host: '127.0.0.1',
@@ -184,7 +184,7 @@ suite('A SPDY Server / Connect', function() {
     req.end();
   });
 
-  test('should not support GOAWAY', function(done) {
+  it('should not support GOAWAY', function(done) {
     // https://github.com/indutny/node-spdy/issues/147
     var agent = spdy.createAgent({
       host: '127.0.0.1',
@@ -210,9 +210,9 @@ suite('A SPDY Server / Connect', function() {
     });
   });
 
-  test('should add accept-encoding header to request headers, ' +
-           'if none present',
-       function(done) {
+  it('should add accept-encoding header to request headers, ' +
+         'if none present',
+     function(done) {
     var agent = spdy.createAgent({
       host: '127.0.0.1',
       port: PORT,

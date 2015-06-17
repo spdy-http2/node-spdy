@@ -6,9 +6,8 @@ var assert = require('assert'),
     url = require('url'),
     PORT = 8081;
 
-suite('A SPDY server / Proxy', function() {
-  return;
-  test('should emit connect event on CONNECT requests', function(done) {
+describe('A SPDY server / Proxy', function() {
+  it('should emit connect event on CONNECT requests', function(done) {
     var proxyServer = spdy.createServer(keys);
     proxyServer.on('connect', function(req, socket) {
       var srvUrl = url.parse('http://' + req.url);
