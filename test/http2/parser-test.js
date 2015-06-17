@@ -203,11 +203,11 @@ describe('HTTP2 Parser', function() {
       var how = '40839cfe3f871d8553d1edff3f';
 
       var first = '00000b010000000001' + hello;
-      var second = '00000d090400000001' + how;
+      var second = '00000d090000000001' + how;
 
       var msg = first + new Array(20000).join(second);
 
-      fail(msg, 'PROTOCOL_ERROR', /list too large/i, done);
+      fail(msg, 'PROTOCOL_ERROR', /list is too large/i, done);
     });
   });
 });
