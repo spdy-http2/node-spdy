@@ -35,7 +35,7 @@
     "mocha": "^2.2.5"
   },
   "scripts": {
-    "test": "mocha --reporter spec --timeout 100000 test/legacy/*-test.js test/http2/*-test.js"
+    "test": "mocha --reporter spec --timeout 100000 test/legacy/*-test.js test/base/*-test.js test/http2/*-test.js"
   },
   "main": "./lib/spdy",
   "optionalDependencies": {}
