@@ -13,21 +13,18 @@ describe('A SPDY server / Proxy', function() {
     proxyServer.on('connect', function(req, socket) {
       var srvUrl = url.parse('http://' + req.url);
       var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, function() {
-        socket._lock(function() {
-          var headers = {
-            'Connection': 'keep-alive',
-            'Proxy-Agent': 'SPDY Proxy'
+        var headers = {
+          'Connection': 'keep-alive',
+          'Proxy-Agent': 'SPDY Proxy'
+        }
+        socket._spdyState.framer.replyFrame(
+          socket._spdyState.id, 200, "Connection Established", headers,
+          function (err, frame) {
+            socket.connection.write(frame);
+            srvSocket.pipe(socket);
+            socket.pipe(srvSocket);
           }
-          socket._spdyState.framer.replyFrame(
-            socket._spdyState.id, 200, "Connection Established", headers,
-            function (err, frame) {
-              socket.connection.write(frame);
-              socket._unlock();
-              srvSocket.pipe(socket);
-              socket.pipe(srvSocket);
-            }
-          );
-        });
+        );
       });
     });
 
