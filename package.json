@@ -25,9 +25,10 @@
     "Jesse Cravens <jesse.cravens@gmail.com>"
   ],
   "dependencies": {
+    "debug": "^2.2.0",
     "hpack.js": "^2.1.2",
-    "wbuf": "^1.2.0",
-    "obuf": "^1.0.0"
+    "obuf": "^1.0.0",
+    "wbuf": "^1.2.0"
   },
   "devDependencies": {
     "jscs": "^1.13.1",
