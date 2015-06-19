@@ -279,5 +279,51 @@ describe('Framer', function() {
         }], done);
       });
     });
+
+    describe('RST', function() {
+      it('should generate regular frame', function(done) {
+        framer.rstFrame({
+          id: 4,
+          code: 4
+        });
+
+        expect({
+          type: 'RST',
+          id: 4,
+          code: 4
+        }, done);
+      });
+    });
+
+    describe('PING', function() {
+      it('should generate regular frame', function(done) {
+        framer.pingFrame({
+          opaque: new Buffer([ 1, 2, 3, 4, 5, 6, 7, 8 ]),
+          ack: true
+        });
+
+        expect({
+          type: 'PING',
+          opaque: version < 4 ? new Buffer([ 5, 6, 7, 8 ]) :
+                                new Buffer([ 1, 2, 3, 4, 5, 6, 7, 8 ]),
+          ack: true
+        }, done);
+      });
+    });
+
+    describe('GOAWAY', function() {
+      it('should generate regular frame', function(done) {
+        framer.goawayFrame({
+          lastId: 42,
+          code: 23
+        });
+
+        expect({
+          type: 'GOAWAY',
+          lastId: 42,
+          code: 23
+        }, done);
+      });
+    });
   });
 });
