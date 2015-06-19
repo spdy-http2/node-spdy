@@ -10,7 +10,7 @@ describe('HTTP2 Parser', function() {
     var pool = http2.compressionPool.create();
     parser = http2.parser.create({});
     var comp = pool.get();
-    parser.setCompression(comp.compress, comp.decompress);
+    parser.setCompression(comp);
   });
 
   function pass(data, expected, done) {
