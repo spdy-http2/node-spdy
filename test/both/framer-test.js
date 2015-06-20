@@ -324,6 +324,40 @@ describe('Framer', function() {
           }
         }], done);
       });
+
+      it('should generate continuations', function(done) {
+        framer.setMaxFrameSize(10);
+        parser.setMaxFrameSize(10);
+
+        framer.headersFrame({
+          id: 4,
+          headers: {
+            a: '+++++++++++++++++++++++',
+            c: '+++++++++++++++++++++++',
+            e: '+++++++++++++++++++++++',
+            g: '+++++++++++++++++++++++',
+            i: '+++++++++++++++++++++++'
+          }
+        }, function(err) {
+          assert(!err);
+
+          expect({
+            type: 'HEADERS',
+            id: 4,
+            dependent: 0,
+            priority: 0,
+            fin: false,
+            path: undefined,
+            headers: {
+              'a': '+++++++++++++++++++++++',
+              'c': '+++++++++++++++++++++++',
+              'e': '+++++++++++++++++++++++',
+              'g': '+++++++++++++++++++++++',
+              'i': '+++++++++++++++++++++++'
+            }
+          }, done);
+        });
+      });
     });
 
     describe('RST', function() {
