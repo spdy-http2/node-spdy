@@ -115,7 +115,7 @@ describe('Transport', function() {
       var a = new Buffer(256);
       a.fill('a');
       var b = new Buffer(256);
-      a.fill('b');
+      b.fill('b');
 
       client.request({
         method: 'GET',
