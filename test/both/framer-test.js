@@ -112,6 +112,21 @@ describe('Framer', function() {
           }, done);
         });
       });
+
+      it('should generate negative delta frame', function(done) {
+        framer.windowUpdateFrame({
+          id: 42,
+          delta: -257
+        }, function(err) {
+          assert(!err);
+
+          expect({
+            type: 'WINDOW_UPDATE',
+            id: 42,
+            delta: -257
+          }, done);
+        });
+      });
     });
 
     describe('DATA', function() {

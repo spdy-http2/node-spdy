@@ -27,8 +27,8 @@
   "dependencies": {
     "debug": "^2.2.0",
     "hpack.js": "^2.1.2",
-    "obuf": "^1.0.0",
-    "wbuf": "^1.3.0"
+    "obuf": "^1.1.0",
+    "wbuf": "^1.4.0"
   },
   "devDependencies": {
     "async": "^1.2.1",

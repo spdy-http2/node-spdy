@@ -27,10 +27,12 @@ describe('Transport', function() {
 
         server = new spdy.Connection(pair, {
           protocol: spdy.protocol[name],
+          windowSize: 256,
           isServer: true
         });
         client = new spdy.Connection(pair.other, {
           protocol: spdy.protocol[name],
+          windowSize: 256,
           isServer: false
         });
 
@@ -106,6 +108,36 @@ describe('Transport', function() {
         assert.equal(stream.headers.c, 'd');
 
         expectData(stream, 'hello world', done);
+      });
+    });
+
+    it('should control the flow of the request', function(done) {
+      var a = new Buffer(256);
+      a.fill('a');
+      var b = new Buffer(256);
+      a.fill('b');
+
+      client.request({
+        method: 'GET',
+        path: '/hello',
+        headers: {
+          a: 'b',
+          c: 'd'
+        }
+      }, function(err, stream) {
+        assert(!err);
+
+        stream.write(a);
+        stream.end(b);
+      });
+
+      server.on('stream', function(stream) {
+        assert.equal(stream.method, 'GET');
+        assert.equal(stream.path, '/hello');
+        assert.equal(stream.headers.a, 'b');
+        assert.equal(stream.headers.c, 'd');
+
+        expectData(stream, a + b, done);
       });
     });
   });

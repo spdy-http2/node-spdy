@@ -75,6 +75,14 @@ describe('HTTP2 Parser', function() {
       }, done);
     });
 
+    it('should parse frame with negative window', function(done) {
+      pass('000004080000000000ffffffff', {
+        type: 'WINDOW_UPDATE',
+        id: 0,
+        delta: -1
+      }, done);
+    });
+
     it('should fail on bigger frame', function(done) {
       fail('000005080000000000009f000102', 'FRAME_SIZE_ERROR', /length/i, done);
     });
