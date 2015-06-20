@@ -190,5 +190,29 @@ describe('Transport', function() {
         stream.end();
       });
     });
+
+    it('should split the data if it is too big', function(done) {
+      var a = new Buffer(1024);
+      a.fill('a');
+
+      client.request({
+        method: 'GET',
+        path: '/hello',
+        headers: { }
+      }, function(err, stream) {
+        assert(!err);
+
+        // Make sure settings will be applied before this
+        stream.on('response', function() {
+          stream.end(a);
+        });
+      });
+
+      server.on('stream', function(stream) {
+        stream.respond(200, {});
+
+        expectData(stream, a, done);
+      });
+    });
   });
 });
