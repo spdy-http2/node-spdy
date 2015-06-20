@@ -104,7 +104,7 @@ describe('Transport', function() {
     it('should send data on request', function(done) {
       client.request({
         method: 'GET',
-        path: '/hello',
+        path: '/hello-with-data',
         headers: {
           a: 'b',
           c: 'd'
@@ -121,11 +121,6 @@ describe('Transport', function() {
           ohai: 'yes'
         });
 
-        assert.equal(stream.method, 'GET');
-        assert.equal(stream.path, '/hello');
-        assert.equal(stream.headers.a, 'b');
-        assert.equal(stream.headers.c, 'd');
-
         expectData(stream, 'hello world', done);
       });
     });
@@ -138,7 +133,7 @@ describe('Transport', function() {
 
       client.request({
         method: 'GET',
-        path: '/hello',
+        path: '/hello-flow',
         headers: {
           a: 'b',
           c: 'd'
@@ -161,11 +156,6 @@ describe('Transport', function() {
         stream.setWindow(128);
         stream.respond(200, {});
 
-        assert.equal(stream.method, 'GET');
-        assert.equal(stream.path, '/hello');
-        assert.equal(stream.headers.a, 'b');
-        assert.equal(stream.headers.c, 'd');
-
         expectData(stream, a + b + a + b, done);
       });
     });
@@ -173,7 +163,7 @@ describe('Transport', function() {
     it('should emit `close` on stream', function(done) {
       client.request({
         method: 'GET',
-        path: '/hello',
+        path: '/hello-close',
         headers: {
           a: 'b',
           c: 'd'
@@ -197,7 +187,7 @@ describe('Transport', function() {
 
       client.request({
         method: 'GET',
-        path: '/hello',
+        path: '/hello-split',
         headers: { }
       }, function(err, stream) {
         assert(!err);
