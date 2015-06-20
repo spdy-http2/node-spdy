@@ -31,9 +31,11 @@
     "wbuf": "^1.3.0"
   },
   "devDependencies": {
+    "async": "^1.2.1",
     "jscs": "^1.13.1",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "stream-pair": "^1.0.0"
   },
   "scripts": {
     "test": "mocha --reporter spec --timeout 2000 test/legacy/*-test.js test/base/*-test.js test/both/*-test.js test/http2/*-test.js"
