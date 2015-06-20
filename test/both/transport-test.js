@@ -64,6 +64,8 @@ describe('Transport', function() {
 
     it('should send request', function(done) {
       var sent = false;
+      var received = false;
+
       client.request({
         method: 'GET',
         path: '/hello',
@@ -71,18 +73,31 @@ describe('Transport', function() {
           a: 'b',
           c: 'd'
         }
-      }, function(err) {
+      }, function(err, stream) {
         assert(!err);
         sent = true;
+
+        stream.on('response', function(code, headers) {
+          assert(received);
+
+          assert.equal(code, 200);
+          assert.equal(headers.ohai, 'yes');
+          done();
+        });
       });
 
       server.on('stream', function(stream) {
+        stream.respond(200, {
+          ohai: 'yes'
+        });
+
+        received = true;
+
         assert(sent);
         assert.equal(stream.method, 'GET');
         assert.equal(stream.path, '/hello');
         assert.equal(stream.headers.a, 'b');
         assert.equal(stream.headers.c, 'd');
-        done();
       });
     });
 
@@ -102,6 +117,10 @@ describe('Transport', function() {
       });
 
       server.on('stream', function(stream) {
+        stream.respond(200, {
+          ohai: 'yes'
+        });
+
         assert.equal(stream.method, 'GET');
         assert.equal(stream.path, '/hello');
         assert.equal(stream.headers.a, 'b');

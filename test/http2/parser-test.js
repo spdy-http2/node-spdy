@@ -230,7 +230,7 @@ describe('HTTP2 Parser', function() {
       pass('0000040300000000010000000a', {
         type: 'RST',
         id: 1,
-        code: 10
+        code: 'CONNECT_ERROR'
       }, done);
     });
 

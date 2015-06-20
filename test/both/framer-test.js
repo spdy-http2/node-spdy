@@ -219,7 +219,7 @@ describe('Framer', function() {
             dependent: 0,
             path: undefined,
             headers: {
-              ':status': version < 4 ? '200 OK' : '200',
+              ':status': '200',
 
               'a': 'b'
             }
@@ -330,14 +330,14 @@ describe('Framer', function() {
       it('should generate regular frame', function(done) {
         framer.rstFrame({
           id: 4,
-          code: 4
+          code: 'CANCEL'
         }, function(err) {
           assert(!err);
 
           expect({
             type: 'RST',
             id: 4,
-            code: 4
+            code: 'CANCEL'
           }, done);
         });
       });
