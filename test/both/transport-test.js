@@ -131,9 +131,9 @@ describe('Transport', function() {
     });
 
     it('should control the flow of the request', function(done) {
-      var a = new Buffer(256);
+      var a = new Buffer(128);
       a.fill('a');
-      var b = new Buffer(256);
+      var b = new Buffer(128);
       b.fill('b');
 
       client.request({
@@ -146,14 +146,19 @@ describe('Transport', function() {
       }, function(err, stream) {
         assert(!err);
 
+        stream.setWindow(128);
+
         // Make sure settings will be applied before this
         stream.on('response', function() {
+          stream.write(a);
+          stream.write(b);
           stream.write(a);
           stream.end(b);
         });
       });
 
       server.on('stream', function(stream) {
+        stream.setWindow(128);
         stream.respond(200, {});
 
         assert.equal(stream.method, 'GET');
@@ -161,7 +166,7 @@ describe('Transport', function() {
         assert.equal(stream.headers.a, 'b');
         assert.equal(stream.headers.c, 'd');
 
-        expectData(stream, a + b, done);
+        expectData(stream, a + b + a + b, done);
       });
     });
 
