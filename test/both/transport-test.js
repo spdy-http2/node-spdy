@@ -146,11 +146,16 @@ describe('Transport', function() {
       }, function(err, stream) {
         assert(!err);
 
-        stream.write(a);
-        stream.end(b);
+        // Make sure settings will be applied before this
+        stream.on('response', function() {
+          stream.write(a);
+          stream.end(b);
+        });
       });
 
       server.on('stream', function(stream) {
+        stream.respond(200, {});
+
         assert.equal(stream.method, 'GET');
         assert.equal(stream.path, '/hello');
         assert.equal(stream.headers.a, 'b');
