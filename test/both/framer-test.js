@@ -56,27 +56,31 @@ describe('Framer', function() {
   everyProtocol(function(name, version) {
     describe('SETTINGS', function() {
       it('should generate empty frame', function(done) {
-        framer.settingsFrame({});
+        framer.settingsFrame({}, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'SETTINGS',
-          settings: {}
-        }, done);
+          expect({
+            type: 'SETTINGS',
+            settings: {}
+          }, done);
+        });
       });
 
       it('should generate regular frame', function(done) {
         framer.settingsFrame({
           max_concurrent_streams: 100,
           initial_window_size: 42
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'SETTINGS',
-          settings: {
-            max_concurrent_streams: 100,
-            initial_window_size: 42
-          }
-        }, done);
+          expect({
+            type: 'SETTINGS',
+            settings: {
+              max_concurrent_streams: 100,
+              initial_window_size: 42
+            }
+          }, done);
+        });
       });
     });
 
@@ -85,13 +89,15 @@ describe('Framer', function() {
         framer.windowUpdateFrame({
           id: 42,
           delta: 257
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'WINDOW_UPDATE',
-          id: 42,
-          delta: 257
-        }, done);
+          expect({
+            type: 'WINDOW_UPDATE',
+            id: 42,
+            delta: 257
+          }, done);
+        });
       });
     });
 
@@ -102,14 +108,16 @@ describe('Framer', function() {
           priority: 0,
           fin: false,
           data: new Buffer('hello')
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'DATA',
-          id: 42,
-          fin: false,
-          data: new Buffer('hello')
-        }, done);
+          expect({
+            type: 'DATA',
+            id: 42,
+            fin: false,
+            data: new Buffer('hello')
+          }, done);
+        });
       });
 
       it('should generate fin frame', function(done) {
@@ -118,14 +126,16 @@ describe('Framer', function() {
           priority: 0,
           fin: true,
           data: new Buffer('hello')
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'DATA',
-          id: 42,
-          fin: true,
-          data: new Buffer('hello')
-        }, done);
+          expect({
+            type: 'DATA',
+            id: 42,
+            fin: true,
+            data: new Buffer('hello')
+          }, done);
+        });
       });
     });
 
@@ -139,24 +149,26 @@ describe('Framer', function() {
           headers: {
             a: 'b'
           }
+        }, function(err) {
+          assert(!err);
+
+          expect({
+            type: 'HEADERS',
+            id: 1,
+            fin: false,
+            priority: 0,
+            dependent: 0,
+            path: '/',
+            headers: {
+              ':authority': 'localhost',
+              ':path': '/',
+              ':scheme': 'https',
+              ':method': 'GET',
+
+              'a': 'b'
+            }
+          }, done);
         });
-
-        expect({
-          type: 'HEADERS',
-          id: 1,
-          fin: false,
-          priority: 0,
-          dependent: 0,
-          path: '/',
-          headers: {
-            ':authority': 'localhost',
-            ':path': '/',
-            ':scheme': 'https',
-            ':method': 'GET',
-
-            'a': 'b'
-          }
-        }, done);
       });
 
       it('should generate response frame', function(done) {
@@ -168,21 +180,23 @@ describe('Framer', function() {
           headers: {
             a: 'b'
           }
+        }, function(err) {
+          assert(!err);
+
+          expect({
+            type: 'HEADERS',
+            id: 1,
+            fin: false,
+            priority: 0,
+            dependent: 0,
+            path: undefined,
+            headers: {
+              ':status': version < 4 ? '200 OK' : '200',
+
+              'a': 'b'
+            }
+          }, done);
         });
-
-        expect({
-          type: 'HEADERS',
-          id: 1,
-          fin: false,
-          priority: 0,
-          dependent: 0,
-          path: undefined,
-          headers: {
-            ':status': version < 4 ? '200 OK' : '200',
-
-            'a': 'b'
-          }
-        }, done);
       });
     });
 
@@ -198,25 +212,27 @@ describe('Framer', function() {
           headers: {
             a: 'b'
           }
+        }, function(err) {
+          assert(!err);
+
+          expect({
+            type: 'PUSH_PROMISE',
+            id: 4,
+            promisedId: 41,
+            priority: 0,
+            fin: false,
+            path: '/',
+            headers: {
+              ':authority': 'localhost',
+              ':path': '/',
+              ':scheme': 'https',
+              ':method': 'GET',
+              ':status': '200',
+
+              'a': 'b'
+            }
+          }, done);
         });
-
-        expect({
-          type: 'PUSH_PROMISE',
-          id: 4,
-          promisedId: 41,
-          priority: 0,
-          fin: false,
-          path: '/',
-          headers: {
-            ':authority': 'localhost',
-            ':path': '/',
-            ':scheme': 'https',
-            ':method': 'GET',
-            ':status': '200',
-
-            'a': 'b'
-          }
-        }, done);
       });
     });
 
@@ -227,19 +243,21 @@ describe('Framer', function() {
           headers: {
             a: 'b'
           }
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'HEADERS',
-          id: 4,
-          dependent: 0,
-          priority: 0,
-          fin: false,
-          path: undefined,
-          headers: {
-            'a': 'b'
-          }
-        }, done);
+          expect({
+            type: 'HEADERS',
+            id: 4,
+            dependent: 0,
+            priority: 0,
+            fin: false,
+            path: undefined,
+            headers: {
+              'a': 'b'
+            }
+          }, done);
+        });
       });
 
       it('should generate frames concurrently', function(done) {
@@ -285,13 +303,15 @@ describe('Framer', function() {
         framer.rstFrame({
           id: 4,
           code: 4
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'RST',
-          id: 4,
-          code: 4
-        }, done);
+          expect({
+            type: 'RST',
+            id: 4,
+            code: 4
+          }, done);
+        });
       });
     });
 
@@ -300,14 +320,16 @@ describe('Framer', function() {
         framer.pingFrame({
           opaque: new Buffer([ 1, 2, 3, 4, 5, 6, 7, 8 ]),
           ack: true
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'PING',
-          opaque: version < 4 ? new Buffer([ 5, 6, 7, 8 ]) :
-                                new Buffer([ 1, 2, 3, 4, 5, 6, 7, 8 ]),
-          ack: true
-        }, done);
+          expect({
+            type: 'PING',
+            opaque: version < 4 ? new Buffer([ 5, 6, 7, 8 ]) :
+                                  new Buffer([ 1, 2, 3, 4, 5, 6, 7, 8 ]),
+            ack: true
+          }, done);
+        });
       });
     });
 
@@ -316,13 +338,15 @@ describe('Framer', function() {
         framer.goawayFrame({
           lastId: 42,
           code: 23
-        });
+        }, function(err) {
+          assert(!err);
 
-        expect({
-          type: 'GOAWAY',
-          lastId: 42,
-          code: 23
-        }, done);
+          expect({
+            type: 'GOAWAY',
+            lastId: 42,
+            code: 23
+          }, done);
+        });
       });
     });
   });

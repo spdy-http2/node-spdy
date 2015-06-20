@@ -85,4 +85,11 @@ describe('Frame Scheduler', function() {
 
     expect('hello', done);
   });
+
+  it('should invoke callback on push', function(done) {
+    scheduler.write(chunk(0, 0, [ 'hello ' ]), function() {
+      assert.equal(scheduler.read().toString(), 'hello ');
+      done();
+    });
+  });
 });

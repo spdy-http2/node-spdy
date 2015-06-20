@@ -41,10 +41,8 @@ describe('HTTP2 Parser', function() {
       pass('00000c0400000000000003000003e8000400a00000', {
         type: 'SETTINGS',
         settings: {
-          3: { value: 1000 },
-          4: { value: 10485760 },
-          initial_window_size: { value: 10485760 },
-          max_concurrent_streams: { value : 1000 }
+          initial_window_size: 10485760,
+          max_concurrent_streams: 1000
         }
       }, done);
     });
@@ -102,13 +100,12 @@ describe('HTTP2 Parser', function() {
              '62293a9ffb52f4f61e92b0d32b817132dbab844d29b8728ec330db2eaecb9f';
 
       pass(hex, {
-        type: 'SYN_STREAM',
+        type: 'HEADERS',
         id: 1,
-        associated: 0,
+        dependent: 0,
         fin: false,
         priority: 255,
-        unidir: false,
-        url: '/',
+        path: '/',
         headers: {
           ':authority': '127.0.0.1:3232',
           ':method': 'GET',
@@ -137,13 +134,12 @@ describe('HTTP2 Parser', function() {
       var first = '000011010c0000000105' + hello + 'ABCDEF1234';
 
       pass(first, {
-        type: 'SYN_STREAM',
+        type: 'HEADERS',
         id: 1,
-        associated: 0,
+        dependent: 0,
         fin: false,
         priority: 0,
-        unidir: false,
-        url: undefined,
+        path: undefined,
         headers: {
           hello: 'world'
         }
@@ -158,13 +154,12 @@ describe('HTTP2 Parser', function() {
       var second = '00000d090400000001' + how;
 
       pass(first + second, {
-        type: 'SYN_STREAM',
+        type: 'HEADERS',
         id: 1,
-        associated: 0,
-        fin: false,
+        dependent: 0,
         priority: 0,
-        unidir: false,
-        url: undefined,
+        fin: false,
+        path: undefined,
         headers: {
           hello: 'world',
           how: 'are you?'
@@ -225,9 +220,9 @@ describe('HTTP2 Parser', function() {
   describe('RST_STREAM', function() {
     it('should parse general frame', function(done) {
       pass('0000040300000000010000000a', {
-        type: 'RST_STREAM',
+        type: 'RST',
         id: 1,
-        status: 10
+        code: 10
       }, done);
     });
 
@@ -291,10 +286,12 @@ describe('HTTP2 Parser', function() {
         type: 'PUSH_PROMISE',
         id: 1,
         promisedId: 2,
+        priority: 0,
+        fin: false,
         headers: {
           hello: 'world'
         },
-        url: undefined
+        path: undefined
       }, done);
     });
 
@@ -305,10 +302,12 @@ describe('HTTP2 Parser', function() {
         type: 'PUSH_PROMISE',
         id: 1,
         promisedId: 2,
+        priority: 0,
+        fin: false,
         headers: {
           hello: 'world'
         },
-        url: undefined
+        path: undefined
       }, done);
     });
 
@@ -376,8 +375,7 @@ describe('HTTP2 Parser', function() {
       pass('0000080700000000000000000100000002', {
         type: 'GOAWAY',
         lastId: 1,
-        errorCode: 2,
-        debug: new Buffer(0)
+        code: 2
       }, done);
     });
 
@@ -385,7 +383,7 @@ describe('HTTP2 Parser', function() {
       pass('00000a0700000000000000000100000002dead', {
         type: 'GOAWAY',
         lastId: 1,
-        errorCode: 2,
+        code: 2,
         debug: new Buffer('dead', 'hex')
       }, done);
     });

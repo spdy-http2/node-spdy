@@ -8,6 +8,18 @@ describe('Transport', function() {
   var server = null;
   var client = null;
 
+  function expectData(stream, expected, callback) {
+    var actual = '';
+
+    stream.on('data', function(chunk) {
+      actual += chunk;
+    });
+    stream.on('end', function() {
+      assert.equal(actual, expected);
+      callback();
+    });
+  }
+
   function protocol(name, version, body) {
     describe(name + ' (v' + version + ')', function() {
       beforeEach(function() {
@@ -64,6 +76,29 @@ describe('Transport', function() {
         assert.equal(stream.headers.a, 'b');
         assert.equal(stream.headers.c, 'd');
         done();
+      });
+    });
+
+    it('should send data on request', function(done) {
+      var clientStream = client.request({
+        method: 'GET',
+        path: '/hello',
+        headers: {
+          a: 'b',
+          c: 'd'
+        }
+      });
+
+      clientStream.write('hello ');
+      clientStream.end('world');
+
+      server.on('stream', function(stream) {
+        assert.equal(stream.method, 'GET');
+        assert.equal(stream.path, '/hello');
+        assert.equal(stream.headers.a, 'b');
+        assert.equal(stream.headers.c, 'd');
+
+        expectData(stream, 'hello world', done);
       });
     });
   });
