@@ -164,5 +164,26 @@ describe('Transport', function() {
         expectData(stream, a + b, done);
       });
     });
+
+    it('should emit `close` on stream', function(done) {
+      client.request({
+        method: 'GET',
+        path: '/hello',
+        headers: {
+          a: 'b',
+          c: 'd'
+        }
+      }, function(err, stream) {
+        stream.on('close', done);
+        stream.resume();
+        stream.end();
+      });
+
+      server.on('stream', function(stream) {
+        stream.respond(200, {});
+        stream.resume();
+        stream.end();
+      });
+    });
   });
 });
