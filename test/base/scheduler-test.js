@@ -9,19 +9,22 @@ describe('Frame Scheduler', function() {
     scheduler = base.Scheduler.create();
   });
 
-  function chunk(stream, priority, chunks) {
+  function chunk(stream, priority, chunks, callback) {
     return {
       stream: stream,
       priority: priority,
-      chunks: chunks
+      chunks: chunks,
+      callback: callback
     };
   }
 
   function expect(string, done) {
     var actual = '';
+    var pending = scheduler.pending.count;
+    var got = 0;
     scheduler.on('data', function(chunk) {
       actual += chunk;
-      if (scheduler.pending.count !== 0)
+      if (++got !== pending)
         return;
 
       assert.equal(actual, string);
@@ -87,9 +90,9 @@ describe('Frame Scheduler', function() {
   });
 
   it('should invoke callback on push', function(done) {
-    scheduler.write(chunk(0, 0, [ 'hello ' ]), function() {
+    scheduler.write(chunk(0, 0, [ 'hello ' ], function() {
       assert.equal(scheduler.read().toString(), 'hello ');
       done();
-    });
+    }));
   });
 });
