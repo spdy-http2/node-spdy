@@ -82,6 +82,19 @@ describe('Framer', function() {
           }, done);
         });
       });
+
+      it('should not put Infinity values', function(done) {
+        framer.settingsFrame({
+          max_concurrent_streams: Infinity
+        }, function(err) {
+          assert(!err);
+
+          expect({
+            type: 'SETTINGS',
+            settings: {}
+          }, done);
+        });
+      });
     });
 
     describe('WINDOW_UPDATE', function() {

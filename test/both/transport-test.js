@@ -61,16 +61,21 @@ describe('Transport', function() {
     });
 
     it('should send request', function(done) {
-      var clientStream = client.request({
+      var sent = false;
+      client.request({
         method: 'GET',
         path: '/hello',
         headers: {
           a: 'b',
           c: 'd'
         }
+      }, function(err) {
+        assert(!err);
+        sent = true;
       });
 
       server.on('stream', function(stream) {
+        assert(sent);
         assert.equal(stream.method, 'GET');
         assert.equal(stream.path, '/hello');
         assert.equal(stream.headers.a, 'b');
@@ -80,17 +85,19 @@ describe('Transport', function() {
     });
 
     it('should send data on request', function(done) {
-      var clientStream = client.request({
+      client.request({
         method: 'GET',
         path: '/hello',
         headers: {
           a: 'b',
           c: 'd'
         }
-      });
+      }, function(err, stream) {
+        assert(!err);
 
-      clientStream.write('hello ');
-      clientStream.end('world');
+        stream.write('hello ');
+        stream.end('world');
+      });
 
       server.on('stream', function(stream) {
         assert.equal(stream.method, 'GET');
