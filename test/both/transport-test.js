@@ -204,5 +204,32 @@ describe('Transport', function() {
         expectData(stream, a, done);
       });
     });
+
+    it('should emit trailing headers', function(done) {
+      client.request({
+        method: 'GET',
+        path: '/hello-split',
+        headers: { }
+      }, function(err, stream) {
+        assert(!err);
+
+        // Make sure settings will be applied before this
+        stream.on('response', function() {
+          stream.write('hello');
+          stream.sendHeaders({ trailer: 'yes' });
+          stream.end();
+        });
+      });
+
+      server.on('stream', function(stream) {
+        stream.respond(200, {});
+
+        stream.resume();
+        stream.on('headers', function(headers) {
+          assert.equal(headers.trailer, 'yes');
+          done();
+        });
+      });
+    });
   });
 });
