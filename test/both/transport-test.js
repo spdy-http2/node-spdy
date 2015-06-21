@@ -231,5 +231,11 @@ describe('Transport', function() {
         });
       });
     });
+
+    it('should send and receive ping', function(done) {
+      client.ping(function() {
+        server.ping(done);
+      });
+    });
   });
 });
