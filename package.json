@@ -24,7 +24,12 @@
     "Tatsuhiro Tsujikawa",
     "Jesse Cravens <jesse.cravens@gmail.com>"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "debug": "^2.2.0",
+    "handle-thing": "^1.0.1",
+    "http-deceiver": "^1.0.1",
+    "spdy-transport": "^1.0.0-rc4"
+  },
   "devDependencies": {
     "mocha": "1.3.x"
   },

@@ -9,3 +9,4 @@ node_modules
 .lock-wscript
 npm-debug.log
 *.node
+test.js
