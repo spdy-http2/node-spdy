@@ -63,3 +63,18 @@ function expectData(stream, expected, callback) {
   });
 }
 exports.expectData = expectData;
+
+exports.everyProtocol = function everyProtocol(body) {
+  var protocols = [
+    { protocol: 'http2', npn: 'h2', version: 4 },
+    { protocol: 'spdy', npn: 'spdy/3.1', version: 3.1 },
+    { protocol: 'spdy', npn: 'spdy/3', version: 3 },
+    { protocol: 'spdy', npn: 'spdy/2', version: 2 }
+  ];
+
+  protocols.forEach(function(protocol) {
+    describe(protocol.npn, function() {
+      body(protocol.protocol, protocol.npn, protocol.version);
+    });
+  });
+};
