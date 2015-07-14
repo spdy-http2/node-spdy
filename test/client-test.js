@@ -18,6 +18,7 @@ describe('SPDY Client', function() {
         });
         req.on('end', function() {
           res.writeHead(200, req.headers);
+          res.addTrailers({ trai: 'ler' });
 
           var push = res.push('/push', {
             push: 'yes'
@@ -106,6 +107,23 @@ describe('SPDY Client', function() {
 
         push.resume();
         push.once('end', done);
+      });
+      req.end();
+    });
+
+    it('should receive trailing headers', function(done) {
+      var req = https.request({
+        agent: agent,
+
+        method: 'GET',
+        path: '/get'
+      }, function(res) {
+        assert.equal(res.statusCode, 200);
+
+        res.on('headers', function(headers) {
+          assert.equal(headers.trai, 'ler');
+          fixtures.expectData(res, 'okay', done);
+        });
       });
       req.end();
     });

@@ -147,5 +147,42 @@ describe('SPDY Server', function() {
           return done();
       }
     });
+
+    it('should receive trailing headers', function(done) {
+      var stream = client.request({
+        method: 'POST',
+        path: '/post'
+      }, function(err) {
+        assert(!err);
+
+        stream.sendHeaders({ trai: 'ler' });
+        stream.end();
+
+        stream.on('response', function(status, headers) {
+          assert.equal(status, 200);
+          assert.equal(headers.ok, 'yes');
+
+          fixtures.expectData(stream, 'response', done);
+        });
+      });
+
+      server.on('request', function(req, res) {
+        var gotHeaders = false;
+        req.on('headers', function(headers) {
+          gotHeaders = true;
+          assert.equal(headers.trai, 'ler');
+        });
+
+        req.on('end', function() {
+          assert(gotHeaders);
+
+          res.writeHead(200, {
+            ok: 'yes'
+          });
+          res.end('response');
+        });
+        req.resume();
+      });
+    });
   });
 });
