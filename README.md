@@ -1,4 +1,7 @@
-# SPDY Server for node.js [![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
+# SPDY Server for node.js
+
+[![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
+[![NPM version](https://badge.fury.io/js/spdy.svg)](http://badge.fury.io/js/spdy)
 
 <a href="http://flattr.com/thing/758213/indutnynode-spdy-on-GitHub" target="_blank">
 <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a>
