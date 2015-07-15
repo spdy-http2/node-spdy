@@ -85,7 +85,7 @@ describe('SPDY Server', function() {
 
         assert.equal(req.method, 'GET');
         assert.equal(req.url, '/get');
-        assert.equal(req.headers.a, 'b');
+        assert.deepEqual(req.headers, { a: 'b', host: 'localhost' });
 
         req.on('end', function() {
           res.writeHead(200, {
