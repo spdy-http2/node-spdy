@@ -242,4 +242,38 @@ describe('SPDY Server', function() {
       req.end();
     });
   });
+
+  it('should support custom base', function(done) {
+    function Pseuver(options, listener) {
+      https.Server.call(this, options, listener);
+    }
+    util.inherits(Pseuver, https.Server);
+
+    var server = spdy.createServer(Pseuver, fixtures.keys, function(req, res) {
+      assert(!req.isSpdy);
+      assert.equal(req.spdyVersion, 1);
+
+      res.writeHead(200);
+      res.end();
+    });
+
+    server.listen(fixtures.port, function() {
+      var req = https.request({
+        agent: false,
+        rejectUnauthorized: false,
+        NPNProtocols: [ 'http/1.1' ],
+        port: fixtures.port,
+        method: 'GET',
+        path: '/'
+      }, function(res) {
+        assert.equal(res.statusCode, 200);
+        res.resume();
+        res.on('end', function() {
+          server.close(done);
+        });
+      });
+
+      req.end();
+    });
+  });
 });
