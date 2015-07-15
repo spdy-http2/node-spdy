@@ -75,6 +75,14 @@ describe('SPDY Server', function() {
       });
 
       server.on('request', function(req, res) {
+        assert(req.isSpdy);
+
+        // Auto-detection
+        if (version === 3.1)
+          assert(req.spdyVersion >= 3 && req.spdyVersion <= 3.1);
+        else
+          assert.equal(req.spdyVersion, version);
+
         assert.equal(req.method, 'GET');
         assert.equal(req.url, '/get');
         assert.equal(req.headers.a, 'b');
@@ -208,6 +216,9 @@ describe('SPDY Server', function() {
 
   it('should respond to http/1.1', function(done) {
     var server = spdy.createServer(fixtures.keys, function(req, res) {
+      assert(!req.isSpdy);
+      assert.equal(req.spdyVersion, 1);
+
       res.writeHead(200);
       res.end();
     });

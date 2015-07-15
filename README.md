@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
 [![NPM version](https://badge.fury.io/js/spdy.svg)](http://badge.fury.io/js/spdy)
 
-With this module you can create [HTTP2][0] [SPDY][1] servers
+With this module you can create [HTTP2][0] / [SPDY][1] servers
 in node.js with natural http module interface and fallback to regular https
 (for browsers that don't support neither HTTP2, nor SPDY yet).
 
@@ -66,25 +66,6 @@ http.get({
 }).end();
 ```
 
-And by popular demand - usage with
-[express](https://github.com/visionmedia/express):
-
-```javascript
-var spdy = require('spdy'),
-    express = require('express'),
-    fs = require('fs');
-
-var options = { /* the same as above */ };
-
-var app = express();
-
-app.use(/* your favorite middleware */);
-
-var server = spdy.createServer(options, app);
-
-server.listen(3000);
-```
-
 ## API
 
 API is compatible with `http` and `https` module, but you can use another
@@ -100,15 +81,14 @@ spdy.createServer(
 
 Request listener will receive two arguments: `request` and `response`. They're
 both instances of `http`'s `IncomingMessage` and `OutgoingMessage`. But three
-custom properties are added to both of them: `streamID`, `isSpdy`,
-`spdyVersion`. The first one indicates on which spdy stream are sitting request
-and response. Second is always true and can be checked to ensure that incoming
-request wasn't received by HTTPS fallback and last one is a number representing
-used SPDY protocol version (2 or 3 for now).
+custom properties are added to both of them: `isSpdy`, `spdyVersion`. `isSpdy`
+is `true` when the request was processed using HTTP2/SPDY protocols, it is
+`false` in case of HTTP/1.1 fallback. `spdyVersion` is either of: `2`, `3`,
+`3.1`, or `4` (for HTTP2).
 
 ### Push streams
 
-It is possible to initiate 'push' streams to send content to clients _before_
+It is possible to initiate [PUSH_PROMISE][5] to send content to clients _before_
 the client requests it.
 
 ```javascript
@@ -125,60 +105,35 @@ spdy.createServer(options, function(req, res) {
 }).listen(3000);
 ```
 
-The method is also avaliable when using SPDY with an Express server:
+[PUSH_PROMISE][5] may be sent using the `push()` method on the current response
+object.  The signature of the `push()` method is:
 
-```javascript
-var app = express();
-
-var server = spdy.createServer(options, app);
-
-app.get('/', function(req, res) {
-  var headers = { 'content-type': 'application/javascript' };
-  res.push('/main.js', headers, function(err, stream) {
-    stream.on('acknowledge', function() {
-    });
-
-    stream.on('error', function() {
-    });
-
-    stream.end('alert("hello from push stream!");');
-  });
-
-  res.end('<script src="/main.js"></script>');
-});
-
-server.listen(3000);
-```
-
-
-Push is accomplished via the `push()` method invoked on the current response
-object (this works for express.js response objects as well).  The format of the
-`push()` method is:
-
-`.push('full or relative url', { ... headers ... }, optional priority, callback)`
+`.push('full or relative url', { ... headers ... }, callback)`
 
 You can use either full ( `http://host/path` ) or relative ( `/path` ) urls with
 `.push()`. `headers` are the same as for regular response object. `callback`
-will receive two arguments: `err` (if any error is happened) and `stream`
-(stream object have API compatible with a
-[net.Socket](http://nodejs.org/docs/latest/api/net.html#net.Socket) ).
+will receive two arguments: `err` (if any error is happened) and a [Duplex][4]
+stream as the second argument.
 
 Client usage:
 ```javascript
 var agent = spdy.createAgent({ /* ... */ });
-agent.on('push', function(stream) {
+var req = http.get({
+  host: 'www.google.com',
+  agent: agent
+}, function(response) {
+});
+req.on('push', function(stream) {
   stream.on('error', function(err) {
     // Handle error
   });
   // Read data from stream
-  // ...
-  // stream.associated points to associated client-initiated stream
 });
 ```
 
 NOTE: You're responsible for the `stream` object once given it in `.push()`
-callback. Hence ignoring `error` events on it might result in uncaught
-exceptions and crash your program.
+callback or `push` event. Hence ignoring `error` event on it will result in
+uncaught exception and crash your program.
 
 ### Trailing headers
 
@@ -210,14 +165,9 @@ req.end();
 
 ### Options
 
-All options supported by
-[tls](http://nodejs.org/docs/latest/api/tls.html#tls.createServer) are working
-with node-spdy. In addition, `maxStreams` options is available. it allows you
-controlling [maximum concurrent streams][2]
-protocol option (if client will start more streams than that limit, RST_STREAM
-will be sent for each additional stream).
+All options supported by [tls][2] work with node-spdy.
 
-Additional options (should be passed in `spdy` sub-object):
+Additional options may be passed via `spdy` sub-object:
 
 * `plain` - if defined, server will ignore NPN and ALPN data and choose whether
   to use spdy or plain http by looking at first data packet.
@@ -229,7 +179,8 @@ Additional options (should be passed in `spdy` sub-object):
   (defaults to 8192)
 * `protocols` - list of NPN/ALPN protocols to use (default is:
   `['h2','spdy/3.1', 'spdy/3', 'spdy/2','http/1.1', 'http/1.0']`)
-* `protocol` - use specific protocol if no NPN/ALPN extension was provided
+* `protocol` - use specific protocol if no NPN/ALPN ex In addition,
+* `maxStreams` - set "[maximum concurrent streams][3]" protocol option
 
 #### Contributors
 
@@ -268,4 +219,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [0]: https://http2.github.io/
 [1]: http://www.chromium.org/spdy
-[2]: https://httpwg.github.io/specs/rfc7540.html#SETTINGS_MAX_CONCURRENT_STREAMS
+[2]: http://nodejs.org/docs/latest/api/tls.html#tls.createServer
+[3]: https://httpwg.github.io/specs/rfc7540.html#SETTINGS_MAX_CONCURRENT_STREAMS
+[4]: https://iojs.org/api/stream.html#stream_class_stream_duplex
+[5]: https://httpwg.github.io/specs/rfc7540.html#PUSH_PROMISE
