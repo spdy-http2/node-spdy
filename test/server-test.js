@@ -223,7 +223,7 @@ describe('SPDY Server', function() {
         assert(!err);
 
         stream.on('response', function(status, headers) {
-          assert.equal(status, 200);
+          assert.equal(status, 300);
 
           fixtures.expectData(stream, 'response', done);
         });
@@ -232,6 +232,7 @@ describe('SPDY Server', function() {
 
       server.on('request', function(req, res) {
         req.on('end', function() {
+          res.statusCode = 300;
           res.end('response');
         });
         req.resume();
