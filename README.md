@@ -3,12 +3,9 @@
 [![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
 [![NPM version](https://badge.fury.io/js/spdy.svg)](http://badge.fury.io/js/spdy)
 
-<a href="http://flattr.com/thing/758213/indutnynode-spdy-on-GitHub" target="_blank">
-<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a>
-
-With this module you can create [SPDY](http://www.chromium.org/spdy) servers
+With this module you can create [HTTP2][0] [SPDY][1] servers
 in node.js with natural http module interface and fallback to regular https
-(for browsers that don't support SPDY yet).
+(for browsers that don't support neither HTTP2, nor SPDY yet).
 
 ## Usage
 
@@ -216,7 +213,7 @@ req.end();
 All options supported by
 [tls](http://nodejs.org/docs/latest/api/tls.html#tls.createServer) are working
 with node-spdy. In addition, `maxStreams` options is available. it allows you
-controlling [maximum concurrent streams][0]
+controlling [maximum concurrent streams][2]
 protocol option (if client will start more streams than that limit, RST_STREAM
 will be sent for each additional stream).
 
@@ -269,4 +266,6 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[0]: https://httpwg.github.io/specs/rfc7540.html#SETTINGS_MAX_CONCURRENT_STREAMS
+[0]: https://http2.github.io/
+[1]: http://www.chromium.org/spdy
+[2]: https://httpwg.github.io/specs/rfc7540.html#SETTINGS_MAX_CONCURRENT_STREAMS
