@@ -160,7 +160,9 @@ describe('SPDY Server', function() {
         });
 
         var push = res.push('/push', {
-          yes: 'push'
+          request: {
+            yes: 'push'
+          }
         });
         push.end('push');
 

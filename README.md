@@ -93,8 +93,14 @@ the client requests it.
 
 ```javascript
 spdy.createServer(options, function(req, res) {
-  var headers = { 'content-type': 'application/javascript' };
-  var stream = res.push('/main.js', headers);
+  var stream = res.push('/main.js', {
+    request: {
+      accept: '*/*'
+    },
+    response: {
+      'content-type': 'application/javascript'
+    }
+  });
   stream.on('acknowledge', function() {
   });
   stream.on('error', function() {
@@ -108,12 +114,11 @@ spdy.createServer(options, function(req, res) {
 [PUSH_PROMISE][5] may be sent using the `push()` method on the current response
 object.  The signature of the `push()` method is:
 
-`.push('full or relative url', { ... headers ... }, callback)`
+`.push('/some/relative/url', { request: {...}, response: {...} }, callback)`
 
-You can use either full ( `http://host/path` ) or relative ( `/path` ) urls with
-`.push()`. `headers` are the same as for regular response object. `callback`
-will receive two arguments: `err` (if any error is happened) and a [Duplex][4]
-stream as the second argument.
+Second argument contains headers for both PUSH_PROMISE and emulated response.
+`callback` will receive two arguments: `err` (if any error is happened) and a
+[Duplex][4] stream as the second argument.
 
 Client usage:
 ```javascript

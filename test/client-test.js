@@ -21,7 +21,9 @@ describe('SPDY Client', function() {
           res.addTrailers({ trai: 'ler' });
 
           var push = res.push('/push', {
-            push: 'yes'
+            request: {
+              push: 'yes'
+            }
           }, function(err) {
             assert(!err);
 
