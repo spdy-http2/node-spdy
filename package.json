@@ -29,7 +29,7 @@
     "handle-thing": "^1.2.0",
     "http-deceiver": "^1.2.0",
     "select-hose": "^2.0.0",
-    "spdy-transport": "^1.0.0-rc7"
+    "spdy-transport": "^1.0.0-rc8"
   },
   "devDependencies": {
     "jscs": "^1.13.1",
