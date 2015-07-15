@@ -214,6 +214,29 @@ describe('SPDY Server', function() {
         req.resume();
       });
     });
+
+    it('should call .writeHead() automatically', function(done) {
+      var stream = client.request({
+        method: 'POST',
+        path: '/post'
+      }, function(err) {
+        assert(!err);
+
+        stream.on('response', function(status, headers) {
+          assert.equal(status, 200);
+
+          fixtures.expectData(stream, 'response', done);
+        });
+        stream.end();
+      });
+
+      server.on('request', function(req, res) {
+        req.on('end', function() {
+          res.end('response');
+        });
+        req.resume();
+      });
+    });
   });
 
   it('should respond to http/1.1', function(done) {
