@@ -1,20 +1,40 @@
 var assert = require('assert');
 var tls = require('tls');
+var net = require('net');
+var https = require('https');
 var transport = require('spdy-transport');
+var util = require('util');
 
 var fixtures = require('./fixtures');
 var spdy = require('../');
 
-describe('SPDY Server', function() {
+function everyConfig(body) {
   fixtures.everyProtocol(function(protocol, npn, version) {
+    if (npn === 'spdy/2')
+      return;
+
+    [ false, true ].forEach(function(plain) {
+      describe(plain ? 'plain mode' : 'ssl mode', function() {
+        body(protocol, npn, version, plain);
+      });
+    });
+  });
+}
+
+describe('SPDY Server', function() {
+  everyConfig(function(protocol, npn, version, plain) {
     var server;
     var client;
 
     beforeEach(function(done) {
-      server = spdy.createServer(fixtures.keys);
+      server = spdy.createServer(util._extend({
+        spdy: {
+          plain: plain
+        }
+      }, fixtures.keys));
 
       server.listen(fixtures.port, function() {
-        var socket = tls.connect({
+        var socket = (plain ? net : tls).connect({
           rejectUnauthorized: false,
           port: fixtures.port,
           NPNProtocols: [ npn ]
@@ -183,6 +203,32 @@ describe('SPDY Server', function() {
         });
         req.resume();
       });
+    });
+  });
+
+  it('should respond to http/1.1', function(done) {
+    var server = spdy.createServer(fixtures.keys, function(req, res) {
+      res.writeHead(200);
+      res.end();
+    });
+
+    server.listen(fixtures.port, function() {
+      var req = https.request({
+        agent: false,
+        rejectUnauthorized: false,
+        NPNProtocols: [ 'http/1.1' ],
+        port: fixtures.port,
+        method: 'GET',
+        path: '/'
+      }, function(res) {
+        assert.equal(res.statusCode, 200);
+        res.resume();
+        res.on('end', function() {
+          server.close(done);
+        });
+      });
+
+      req.end();
     });
   });
 });
