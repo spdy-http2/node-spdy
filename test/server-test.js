@@ -188,7 +188,7 @@ describe('SPDY Server', function() {
 
       server.on('request', function(req, res) {
         var gotHeaders = false;
-        req.on('headers', function(headers) {
+        req.on('trailers', function(headers) {
           gotHeaders = true;
           assert.equal(headers.trai, 'ler');
         });

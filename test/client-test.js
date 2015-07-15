@@ -120,7 +120,7 @@ describe('SPDY Client', function() {
       }, function(res) {
         assert.equal(res.statusCode, 200);
 
-        res.on('headers', function(headers) {
+        res.on('trailers', function(headers) {
           assert.equal(headers.trai, 'ler');
           fixtures.expectData(res, 'okay', done);
         });

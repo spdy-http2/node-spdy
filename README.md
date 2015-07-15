@@ -20,10 +20,12 @@ var options = {
   ca: fs.readFileSync(__dirname + '/keys/spdy-ca.pem'),
 
   // **optional** SPDY-specific options
-  windowSize: 1024 * 1024, // Server's window size
+  spdy: {
+    windowSize: 1024 * 1024, // Server's window size
 
-  // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-  autoSpdy31: false
+    // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
+    autoSpdy31: false
+  }
 };
 
 var server = spdy.createServer(options, function(req, res) {
@@ -211,11 +213,11 @@ req.end();
 All options supported by
 [tls](http://nodejs.org/docs/latest/api/tls.html#tls.createServer) are working
 with node-spdy. In addition, `maxStreams` options is available. it allows you
-controlling [maximum concurrent streams](http://www.chromium.org/spdy/spdy-protocol/spdy-protocol-draft2#TOC-SETTINGS)
+controlling [maximum concurrent streams][0]
 protocol option (if client will start more streams than that limit, RST_STREAM
 will be sent for each additional stream).
 
-Additional options:
+Additional options (should be passed in `spdy` sub-object):
 
 * `plain` - if defined, server will ignore NPN and ALPN data and choose whether
   to use spdy or plain http by looking at first data packet.
@@ -225,6 +227,9 @@ Additional options:
   chunk. Setting it to non-zero value is recommended if you care about
   interleaving of outgoing data from multiple different streams.
   (defaults to 8192)
+* `protocols` - list of NPN/ALPN protocols to use (default is:
+  `['h2','spdy/3.1', 'spdy/3', 'spdy/2','http/1.1', 'http/1.0']`)
+* `protocol` - use specific protocol if no NPN/ALPN extension was provided
 
 #### Contributors
 
@@ -240,7 +245,7 @@ Additional options:
 
 This software is licensed under the MIT License.
 
-Copyright Fedor Indutny, 2014.
+Copyright Fedor Indutny, 2015.
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -260,3 +265,5 @@ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[0]: https://httpwg.github.io/specs/rfc7540.html#SETTINGS_MAX_CONCURRENT_STREAMS
