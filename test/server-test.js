@@ -238,6 +238,31 @@ describe('SPDY Server', function() {
         req.resume();
       });
     });
+
+    it('should not crash on .writeHead() after socket close', function(done) {
+      var stream = client.request({
+        method: 'POST',
+        path: '/post'
+      }, function(err) {
+        assert(!err);
+
+        setTimeout(function() {
+          client.socket.destroy();
+        }, 50);
+        stream.on('error', function() {});
+        stream.end();
+      });
+
+      server.on('request', function(req, res) {
+        req.connection.on('close', function() {
+          assert.doesNotThrow(function() {
+            res.writeHead(200);
+            res.end('response');
+          });
+          done();
+        });
+      });
+    });
   });
 
   it('should respond to http/1.1', function(done) {
