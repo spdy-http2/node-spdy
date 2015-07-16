@@ -21,10 +21,15 @@ var options = {
 
   // **optional** SPDY-specific options
   spdy: {
-    windowSize: 1024 * 1024, // Server's window size
+    protocols: [ 'h2', 'spdy/3.1', ..., 'http/1.1' ],
+    plain: false,
 
-    // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-    autoSpdy31: false
+    connection: {
+      windowSize: 1024 * 1024, // Server's window size
+
+      // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
+      autoSpdy31: false
+    }
   }
 };
 
@@ -48,8 +53,7 @@ var agent = spdy.createAgent({
   // Optional SPDY options
   spdy: {
     plain: false or true,
-    ssl: false or true,
-    version: 3 // Force SPDY version
+    ssl: false or true
   }
 });
 
