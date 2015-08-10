@@ -263,6 +263,33 @@ describe('SPDY Server', function() {
         });
       });
     });
+
+    it('should end response after writing everything down', function(done) {
+      var stream = client.request({
+        method: 'GET',
+        path: '/post'
+      }, function(err) {
+        assert(!err);
+
+        stream.on('response', function(status, headers) {
+          assert.equal(status, 200);
+
+          fixtures.expectData(stream, 'hello world, what\'s up?', done);
+        });
+
+        stream.end();
+      });
+
+      server.on('request', function(req, res) {
+        req.resume();
+        res.writeHead(200);
+        res.write('hello ');
+        res.write('world');
+        res.write(', what\'s');
+        res.write(' up?');
+        res.end();
+      });
+    });
   });
 
   it('should respond to http/1.1', function(done) {
