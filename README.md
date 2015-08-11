@@ -70,6 +70,17 @@ http.get({
 }).end();
 ```
 
+Please note that if you use a custom agent, by default all errors will result in an uncaught exception. To handle these errors subscribe to the `error` event and re-emit the captured error:
+
+```javascript
+var agent = spdy.createAgent({
+  host: 'www.google.com',
+  port: 443
+}).once('error', function (err) {
+  this.emit(err);
+});
+```
+
 ## API
 
 API is compatible with `http` and `https` module, but you can use another
