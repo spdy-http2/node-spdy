@@ -76,6 +76,7 @@ describe('SPDY Server', function() {
 
       server.on('request', function(req, res) {
         assert(req.isSpdy);
+        assert(req.socket.encrypted);
 
         // Auto-detection
         if (version === 3.1)
