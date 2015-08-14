@@ -1,17 +1,27 @@
 var assert = require('assert');
 var https = require('https');
+var http = require('http');
+var util = require('util');
 var transport = require('spdy-transport');
 
 var fixtures = require('./fixtures');
 var spdy = require('../');
 
 describe('SPDY Client', function() {
-  fixtures.everyProtocol(function(protocol, npn, version) {
+  fixtures.everyConfig(function(protocol, npn, version, plain) {
     var server;
     var agent;
+    var hmodule;
 
     beforeEach(function(done) {
-      server = spdy.createServer(fixtures.keys, function(req, res) {
+      hmodule = plain ? http : https;
+
+      var options = util._extend({
+        spdy: {
+          plain: plain
+        }
+      }, fixtures.keys);
+      server = spdy.createServer(options, function(req, res) {
         var body = '';
         req.on('data', function(chunk) {
           body += chunk;
@@ -41,6 +51,8 @@ describe('SPDY Client', function() {
           rejectUnauthorized: false,
           port: fixtures.port,
           spdy: {
+            plain: plain,
+            protocol: plain ? npn : null,
             protocols: [ npn ]
           }
         });
@@ -61,7 +73,7 @@ describe('SPDY Client', function() {
     });
 
     it('should send GET request', function(done) {
-      var req = https.request({
+      var req = hmodule.request({
         agent: agent,
 
         method: 'GET',
@@ -79,7 +91,7 @@ describe('SPDY Client', function() {
     });
 
     it('should send POST request', function(done) {
-      var req = https.request({
+      var req = hmodule.request({
         agent: agent,
 
         method: 'POST',
@@ -93,7 +105,7 @@ describe('SPDY Client', function() {
     });
 
     it('should receive PUSH_PROMISE', function(done) {
-      var req = https.request({
+      var req = hmodule.request({
         agent: agent,
 
         method: 'GET',
@@ -114,7 +126,7 @@ describe('SPDY Client', function() {
     });
 
     it('should receive trailing headers', function(done) {
-      var req = https.request({
+      var req = hmodule.request({
         agent: agent,
 
         method: 'GET',

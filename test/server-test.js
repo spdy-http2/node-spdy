@@ -8,21 +8,8 @@ var util = require('util');
 var fixtures = require('./fixtures');
 var spdy = require('../');
 
-function everyConfig(body) {
-  fixtures.everyProtocol(function(protocol, npn, version) {
-    if (npn === 'spdy/2')
-      return;
-
-    [ false, true ].forEach(function(plain) {
-      describe(plain ? 'plain mode' : 'ssl mode', function() {
-        body(protocol, npn, version, plain);
-      });
-    });
-  });
-}
-
 describe('SPDY Server', function() {
-  everyConfig(function(protocol, npn, version, plain) {
+  fixtures.everyConfig(function(protocol, npn, version, plain) {
     var server;
     var client;
 
