@@ -118,8 +118,6 @@ spdy.createServer(options, function(req, res) {
       'content-type': 'application/javascript'
     }
   });
-  stream.on('acknowledge', function() {
-  });
   stream.on('error', function() {
   });
   stream.end('alert("hello from push stream!");');
