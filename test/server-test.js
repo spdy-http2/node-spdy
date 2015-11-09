@@ -16,6 +16,7 @@ describe('SPDY Server', function() {
     beforeEach(function(done) {
       server = spdy.createServer(util._extend({
         spdy: {
+          'x-forwarded-for': true,
           plain: plain
         }
       }, fixtures.keys));
@@ -275,6 +276,27 @@ describe('SPDY Server', function() {
         res.write('world');
         res.write(', what\'s');
         res.write(' up?');
+        res.end();
+      });
+    });
+
+    it('should handle x-forwarded-for', function(done) {
+      client.sendXForwardedFor('1.2.3.4');
+
+      var stream = client.request({
+        method: 'GET',
+        path: '/post'
+      }, function(err) {
+        assert(!err);
+
+        stream.resume();
+        stream.on('end', done);
+        stream.end();
+      });
+
+      server.on('request', function(req, res) {
+        assert.equal(req.headers['x-forwarded-for'], '1.2.3.4');
+        req.resume();
         res.end();
       });
     });

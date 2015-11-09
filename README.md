@@ -24,6 +24,13 @@ var options = {
     protocols: [ 'h2', 'spdy/3.1', ..., 'http/1.1' ],
     plain: false,
 
+    // **optional**
+    // Parse first incoming X_FORWARDED_FOR frame and put it to the
+    // headers of every request.
+    // NOTE: Use with care! This should not be used without some proxy that
+    // will *always* send X_FORWARDED_FOR
+    'x-forwarded-for': true,
+
     connection: {
       windowSize: 1024 * 1024, // Server's window size
 
@@ -53,7 +60,10 @@ var agent = spdy.createAgent({
   // Optional SPDY options
   spdy: {
     plain: false or true,
-    ssl: false or true
+    ssl: false or true,
+
+    // **optional** send X_FORWARDED_FOR
+    'x-forwarded-for': '127.0.0.1'
   }
 });
 
