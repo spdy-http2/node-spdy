@@ -122,6 +122,61 @@ describe('SPDY Server', function() {
       }
     });
 
+    it('should process expect-continue request', function(done) {
+      var stream = client.request({
+        method: 'GET',
+        path: '/get',
+        headers: {
+          Expect: '100-continue'
+        }
+      }, function(err) {
+        assert(!err);
+
+        stream.on('response', function(status, headers) {
+          assert.equal(status, 100);
+
+          fixtures.expectData(stream, 'response', done);
+        });
+
+        stream.end();
+      });
+
+      server.on('request', function(req, res) {
+        req.on('end', function() {
+          res.end('response');
+        });
+        req.resume();
+      });
+    });
+
+    it('should emit `checkContinue` request', function(done) {
+      var stream = client.request({
+        method: 'GET',
+        path: '/get',
+        headers: {
+          Expect: '100-continue'
+        }
+      }, function(err) {
+        assert(!err);
+
+        stream.on('response', function(status, headers) {
+          assert.equal(status, 100);
+
+          fixtures.expectData(stream, 'response', done);
+        });
+
+        stream.end();
+      });
+
+      server.on('checkContinue', function(req, res) {
+        req.on('end', function() {
+          res.writeContinue();
+          res.end('response');
+        });
+        req.resume();
+      });
+    });
+
     it('should send PUSH_PROMISE', function(done) {
       var stream = client.request({
         method: 'POST',
