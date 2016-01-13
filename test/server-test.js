@@ -64,7 +64,10 @@ describe('SPDY Server', function() {
 
       server.on('request', function(req, res) {
         assert(req.isSpdy);
-        assert(req.socket.encrypted);
+        if (!plain) {
+          assert(req.socket.encrypted);
+          assert(req.socket.getPeerCertificate());
+        }
 
         // Auto-detection
         if (version === 3.1)
