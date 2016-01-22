@@ -74,6 +74,8 @@ describe('SPDY Server', function() {
           assert(req.spdyVersion >= 3 && req.spdyVersion <= 3.1);
         else
           assert.equal(req.spdyVersion, version);
+        assert(req.spdyStream);
+        assert(res.spdyStream);
 
         assert.equal(req.method, 'GET');
         assert.equal(req.url, '/get');
