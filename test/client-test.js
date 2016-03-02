@@ -96,13 +96,22 @@ describe('SPDY Client', function() {
           agent: agent,
 
           method: 'POST',
-          path: '/post'
+          path: '/post',
+
+          headers: {
+            post: 'headers'
+          }
         }, function(res) {
           assert.equal(res.statusCode, 200);
+          assert.equal(res.headers.post, 'headers');
 
           fixtures.expectData(res, 'post body', done);
         });
-        req.end('post body');
+
+        agent._spdyState.socket.once(plain ? 'connect' : 'secureConnect',
+                                     function() {
+          req.end('post body');
+        });
       });
 
       it('should receive PUSH_PROMISE', function(done) {
