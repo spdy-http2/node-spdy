@@ -1,6 +1,6 @@
 {
   "name": "spdy",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Implementation of the SPDY protocol on node.js.",
   "license": "MIT",
   "keywords": [
