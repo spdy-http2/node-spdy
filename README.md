@@ -1,6 +1,6 @@
 # SPDY Server for node.js
 
-[![Build Status](https://secure.travis-ci.org/indutny/node-spdy.png)](http://travis-ci.org/indutny/node-spdy)
+[![Build Status](https://travis-ci.org/indutny/node-spdy.svg?branch=master)](https://travis-ci.org/indutny/node-spdy)
 [![NPM version](https://badge.fury.io/js/spdy.svg)](http://badge.fury.io/js/spdy)
 
 With this module you can create [HTTP2][0] / [SPDY][1] servers
