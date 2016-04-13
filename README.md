@@ -121,6 +121,8 @@ the client requests it.
 ```javascript
 spdy.createServer(options, function(req, res) {
   var stream = res.push('/main.js', {
+    status: 200, // optional
+    method: 'GET', // optional
     request: {
       accept: '*/*'
     },
