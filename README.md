@@ -15,9 +15,11 @@ var spdy = require('spdy'),
     fs = require('fs');
 
 var options = {
+  // Private key
   key: fs.readFileSync(__dirname + '/keys/spdy-key.pem'),
-  cert: fs.readFileSync(__dirname + '/keys/spdy-cert.pem'),
-  ca: fs.readFileSync(__dirname + '/keys/spdy-ca.pem'),
+
+  // Fullchain file or cert file (prefer the former)
+  cert: fs.readFileSync(__dirname + '/keys/spdy-fullchain.pem'),
 
   // **optional** SPDY-specific options
   spdy: {
