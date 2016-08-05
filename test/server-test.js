@@ -63,6 +63,8 @@ describe('SPDY Server', function() {
       });
 
       server.on('request', function(req, res) {
+        assert.equal(req.isSpdy, res.isSpdy);
+        assert.equal(req.spdyVersion, res.spdyVersion);
         assert(req.isSpdy);
         if (!plain) {
           assert(req.socket.encrypted);
@@ -389,6 +391,8 @@ describe('SPDY Server', function() {
 
   it('should respond to http/1.1', function(done) {
     var server = spdy.createServer(fixtures.keys, function(req, res) {
+      assert.equal(req.isSpdy, res.isSpdy);
+      assert.equal(req.spdyVersion, res.spdyVersion);
       assert(!req.isSpdy);
       assert.equal(req.spdyVersion, 1);
 
@@ -423,6 +427,8 @@ describe('SPDY Server', function() {
     util.inherits(Pseuver, https.Server);
 
     var server = spdy.createServer(Pseuver, fixtures.keys, function(req, res) {
+      assert.equal(req.isSpdy, res.isSpdy);
+      assert.equal(req.spdyVersion, res.spdyVersion);
       assert(!req.isSpdy);
       assert.equal(req.spdyVersion, 1);
 
