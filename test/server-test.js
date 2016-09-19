@@ -88,6 +88,7 @@ describe('SPDY Server', function() {
             ok: 'yes'
           });
           res.end('response');
+          assert(res.finished, 'res.finished should be set');
         });
         req.resume();
       });
