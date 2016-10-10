@@ -115,10 +115,12 @@ describe('SPDY Server', function() {
         assert.equal(req.method, 'POST');
         assert.equal(req.url, '/post');
 
-        res.writeHead(200, {
-          ok: 'yes'
-        });
-        res.end('response');
+        setTimeout(function() {
+          res.writeHead(200, {
+            ok: 'yes'
+          });
+          res.end('response');
+        }, 10);
 
         fixtures.expectData(req, 'request', next);
       });
@@ -207,18 +209,20 @@ describe('SPDY Server', function() {
         assert.equal(req.method, 'POST');
         assert.equal(req.url, '/page');
 
-        res.writeHead(200, {
-          ok: 'yes'
-        });
+        setTimeout(function() {
+          res.writeHead(200, {
+            ok: 'yes'
+          });
 
-        var push = res.push('/push', {
-          request: {
-            yes: 'push'
-          }
-        });
-        push.end('push');
+          var push = res.push('/push', {
+            request: {
+              yes: 'push'
+            }
+          });
+          push.end('push');
 
-        res.end('response');
+          res.end('response');
+        }, 10);
 
         fixtures.expectData(req, 'request', next);
       });

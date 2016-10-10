@@ -91,4 +91,3 @@ exports.everyConfig = function everyConfig(body) {
     });
   });
 }
-
