@@ -1,6 +1,7 @@
 var assert = require('assert');
 var tls = require('tls');
 var net = require('net');
+var http = require('http');
 var https = require('https');
 var transport = require('spdy-transport');
 var util = require('util');
@@ -426,6 +427,40 @@ describe('SPDY Server', function() {
         agent: false,
         rejectUnauthorized: false,
         NPNProtocols: [ 'http/1.1' ],
+        port: fixtures.port,
+        method: 'GET',
+        path: '/'
+      }, function(res) {
+        assert.equal(res.statusCode, 200);
+        res.resume();
+        res.on('end', function() {
+          server.close(done);
+        });
+      });
+
+      req.end();
+    });
+  });
+
+  it('should respond to http/1.1 without TLS', function(done) {
+    var server = spdy.createServer({
+      spdy: {
+        plain: true,
+        ssl: false
+      }
+    }, function(req, res) {
+      assert.equal(req.isSpdy, res.isSpdy);
+      assert.equal(req.spdyVersion, res.spdyVersion);
+      assert(!req.isSpdy);
+      assert.equal(req.spdyVersion, 1);
+
+      res.writeHead(200);
+      res.end();
+    });
+
+    server.listen(fixtures.port, function() {
+      var req = http.request({
+        agent: false,
         port: fixtures.port,
         method: 'GET',
         path: '/'
