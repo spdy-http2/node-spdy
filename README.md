@@ -55,7 +55,7 @@ server.listen(3000);
 Client:
 ```javascript
 var spdy = require('spdy');
-var http = require('http');
+var https = require('https');
 
 var agent = spdy.createAgent({
   host: 'www.google.com',
@@ -63,15 +63,15 @@ var agent = spdy.createAgent({
 
   // Optional SPDY options
   spdy: {
-    plain: false or true,
-    ssl: false or true,
+    plain: false,
+    ssl: true,
 
     // **optional** send X_FORWARDED_FOR
     'x-forwarded-for': '127.0.0.1'
   }
 });
 
-http.get({
+https.get({
   host: 'www.google.com',
   agent: agent
 }, function(response) {
