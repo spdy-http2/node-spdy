@@ -1,53 +1,54 @@
-var assert = require('assert');
-var https = require('https');
-var http = require('http');
-var util = require('util');
-var transport = require('spdy-transport');
+/* eslint-env mocha */
 
-var fixtures = require('./fixtures');
-var spdy = require('../');
+var assert = require('assert')
+var https = require('https')
+var http = require('http')
+var util = require('util')
 
-describe('SPDY Client', function() {
-  describe('regular', function() {
-    fixtures.everyConfig(function(protocol, npn, version, plain) {
-      var server;
-      var agent;
-      var hmodule;
+var fixtures = require('./fixtures')
+var spdy = require('../')
 
-      beforeEach(function(done) {
-        hmodule = plain ? http : https;
+describe('SPDY Client', function () {
+  describe('regular', function () {
+    fixtures.everyConfig(function (protocol, npn, version, plain) {
+      var server
+      var agent
+      var hmodule
+
+      beforeEach(function (done) {
+        hmodule = plain ? http : https
 
         var options = util._extend({
           spdy: {
             plain: plain
           }
-        }, fixtures.keys);
-        server = spdy.createServer(options, function(req, res) {
-          var body = '';
-          req.on('data', function(chunk) {
-            body += chunk;
-          });
-          req.on('end', function() {
-            res.writeHead(200, req.headers);
-            res.addTrailers({ trai: 'ler' });
+        }, fixtures.keys)
+        server = spdy.createServer(options, function (req, res) {
+          var body = ''
+          req.on('data', function (chunk) {
+            body += chunk
+          })
+          req.on('end', function () {
+            res.writeHead(200, req.headers)
+            res.addTrailers({ trai: 'ler' })
 
             var push = res.push('/push', {
               request: {
                 push: 'yes'
               }
-            }, function(err) {
-              assert(!err);
+            }, function (err) {
+              assert(!err)
 
-              push.end('push');
-              push.on('error', function() {
-              });
+              push.end('push')
+              push.on('error', function () {
+              })
 
-              res.end(body || 'okay');
-            });
-          });
-        });
+              res.end(body || 'okay')
+            })
+          })
+        })
 
-        server.listen(fixtures.port, function() {
+        server.listen(fixtures.port, function () {
           agent = spdy.createAgent({
             rejectUnauthorized: false,
             port: fixtures.port,
@@ -56,24 +57,25 @@ describe('SPDY Client', function() {
               protocol: plain ? npn : null,
               protocols: [ npn ]
             }
-          });
+          })
 
-          done();
-        });
-      });
+          done()
+        })
+      })
 
-      afterEach(function(done) {
-        var waiting = 2;
-        agent.close(next);
-        server.close(next);
+      afterEach(function (done) {
+        var waiting = 2
+        agent.close(next)
+        server.close(next)
 
-        function next() {
-          if (--waiting === 0)
-            done();
+        function next () {
+          if (--waiting === 0) {
+            done()
+          }
         }
-      });
+      })
 
-      it('should send GET request', function(done) {
+      it('should send GET request', function (done) {
         var req = hmodule.request({
           agent: agent,
 
@@ -82,16 +84,16 @@ describe('SPDY Client', function() {
           headers: {
             a: 'b'
           }
-        }, function(res) {
-          assert.equal(res.statusCode, 200);
-          assert.equal(res.headers.a, 'b');
+        }, function (res) {
+          assert.equal(res.statusCode, 200)
+          assert.equal(res.headers.a, 'b')
 
-          fixtures.expectData(res, 'okay', done);
-        });
-        req.end();
-      });
+          fixtures.expectData(res, 'okay', done)
+        })
+        req.end()
+      })
 
-      it('should send POST request', function(done) {
+      it('should send POST request', function (done) {
         var req = hmodule.request({
           agent: agent,
 
@@ -101,80 +103,80 @@ describe('SPDY Client', function() {
           headers: {
             post: 'headers'
           }
-        }, function(res) {
-          assert.equal(res.statusCode, 200);
-          assert.equal(res.headers.post, 'headers');
+        }, function (res) {
+          assert.equal(res.statusCode, 200)
+          assert.equal(res.headers.post, 'headers')
 
-          fixtures.expectData(res, 'post body', done);
-        });
+          fixtures.expectData(res, 'post body', done)
+        })
 
         agent._spdyState.socket.once(plain ? 'connect' : 'secureConnect',
-                                     function() {
-          req.end('post body');
-        });
-      });
+                                     function () {
+                                       req.end('post body')
+                                     })
+      })
 
-      it('should receive PUSH_PROMISE', function(done) {
+      it('should receive PUSH_PROMISE', function (done) {
         var req = hmodule.request({
           agent: agent,
 
           method: 'GET',
           path: '/get'
-        }, function(res) {
-          assert.equal(res.statusCode, 200);
+        }, function (res) {
+          assert.equal(res.statusCode, 200)
 
-          res.resume();
-        });
-        req.on('push', function(push) {
-          assert.equal(push.path, '/push');
-          assert.equal(push.headers.push, 'yes');
+          res.resume()
+        })
+        req.on('push', function (push) {
+          assert.equal(push.path, '/push')
+          assert.equal(push.headers.push, 'yes')
 
-          push.resume();
-          push.once('end', done);
-        });
-        req.end();
-      });
+          push.resume()
+          push.once('end', done)
+        })
+        req.end()
+      })
 
-      it('should receive trailing headers', function(done) {
+      it('should receive trailing headers', function (done) {
         var req = hmodule.request({
           agent: agent,
 
           method: 'GET',
           path: '/get'
-        }, function(res) {
-          assert.equal(res.statusCode, 200);
+        }, function (res) {
+          assert.equal(res.statusCode, 200)
 
-          res.on('trailers', function(headers) {
-            assert.equal(headers.trai, 'ler');
-            fixtures.expectData(res, 'okay', done);
-          });
-        });
-        req.end();
-      });
-    });
-  });
+          res.on('trailers', function (headers) {
+            assert.equal(headers.trai, 'ler')
+            fixtures.expectData(res, 'okay', done)
+          })
+        })
+        req.end()
+      })
+    })
+  })
 
-  describe('x-forwarded-for', function() {
-    fixtures.everyConfig(function(protocol, npn, version, plain) {
-      var server;
-      var agent;
-      var hmodule;
+  describe('x-forwarded-for', function () {
+    fixtures.everyConfig(function (protocol, npn, version, plain) {
+      var server
+      var agent
+      var hmodule
 
-      beforeEach(function(done) {
-        hmodule = plain ? http : https;
+      beforeEach(function (done) {
+        hmodule = plain ? http : https
 
         var options = util._extend({
           spdy: {
             plain: plain,
             'x-forwarded-for': true
           }
-        }, fixtures.keys);
-        server = spdy.createServer(options, function(req, res) {
-          res.writeHead(200, req.headers);
-          res.end();
-        });
+        }, fixtures.keys)
+        server = spdy.createServer(options, function (req, res) {
+          res.writeHead(200, req.headers)
+          res.end()
+        })
 
-        server.listen(fixtures.port, function() {
+        server.listen(fixtures.port, function () {
           agent = spdy.createAgent({
             rejectUnauthorized: false,
             port: fixtures.port,
@@ -184,38 +186,39 @@ describe('SPDY Client', function() {
               protocol: plain ? npn : null,
               protocols: [ npn ]
             }
-          });
+          })
 
-          done();
-        });
-      });
+          done()
+        })
+      })
 
-      afterEach(function(done) {
-        var waiting = 2;
-        agent.close(next);
-        server.close(next);
+      afterEach(function (done) {
+        var waiting = 2
+        agent.close(next)
+        server.close(next)
 
-        function next() {
-          if (--waiting === 0)
-            done();
+        function next () {
+          if (--waiting === 0) {
+            done()
+          }
         }
-      });
+      })
 
-      it('should send x-forwarded-for', function(done) {
+      it('should send x-forwarded-for', function (done) {
         var req = hmodule.request({
           agent: agent,
 
           method: 'GET',
           path: '/get'
-        }, function(res) {
-          assert.equal(res.statusCode, 200);
-          assert.equal(res.headers['x-forwarded-for'], '1.2.3.4');
+        }, function (res) {
+          assert.equal(res.statusCode, 200)
+          assert.equal(res.headers['x-forwarded-for'], '1.2.3.4')
 
-          res.resume();
-          res.once('end', done);
-        });
-        req.end();
-      });
-    });
-  });
-});
+          res.resume()
+          res.once('end', done)
+        })
+        req.end()
+      })
+    })
+  })
+})
