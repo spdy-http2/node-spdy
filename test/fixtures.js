@@ -1,8 +1,9 @@
-'use strict';
+/* eslint-env mocha */
+'use strict'
 
-var assert = require('assert');
+var assert = require('assert')
 
-exports.port = 23433;
+exports.port = 23433
 
 exports.keys = {
   key: '-----BEGIN RSA PRIVATE KEY-----\n' +
@@ -49,46 +50,47 @@ exports.keys = {
         'gWF8rg5prjPaLW8HH3Efq59AimFqUVQ4HtcJApjLJDYUKlvsMNMvBqh/pQRRPafj\n' +
         '0Cp8dyS45sbZ2RgXdyfl6gNEj+DiPbaFliIuFmM=\n' +
         '-----END CERTIFICATE-----'
-};
-
-function expectData(stream, expected, callback) {
-  var actual = '';
-
-  stream.on('data', function(chunk) {
-    actual += chunk;
-  });
-  stream.on('end', function() {
-    assert.equal(actual, expected);
-    callback();
-  });
 }
-exports.expectData = expectData;
 
-exports.everyProtocol = function everyProtocol(body) {
+function expectData (stream, expected, callback) {
+  var actual = ''
+
+  stream.on('data', function (chunk) {
+    actual += chunk
+  })
+  stream.on('end', function () {
+    assert.equal(actual, expected)
+    callback()
+  })
+}
+exports.expectData = expectData
+
+exports.everyProtocol = function everyProtocol (body) {
   var protocols = [
     { protocol: 'http2', npn: 'h2', version: 4 },
     { protocol: 'spdy', npn: 'spdy/3.1', version: 3.1 },
     { protocol: 'spdy', npn: 'spdy/3', version: 3 },
     { protocol: 'spdy', npn: 'spdy/2', version: 2 }
-  ];
+  ]
 
-  protocols.forEach(function(protocol) {
-    describe(protocol.npn, function() {
-      body(protocol.protocol, protocol.npn, protocol.version);
-    });
-  });
-};
+  protocols.forEach(function (protocol) {
+    describe(protocol.npn, function () {
+      body(protocol.protocol, protocol.npn, protocol.version)
+    })
+  })
+}
 
-exports.everyConfig = function everyConfig(body) {
-  exports.everyProtocol(function(protocol, npn, version) {
-    if (npn === 'spdy/2')
-      return;
+exports.everyConfig = function everyConfig (body) {
+  exports.everyProtocol(function (protocol, npn, version) {
+    if (npn === 'spdy/2') {
+      return
+    }
 
-    [ false, true ].forEach(function(plain) {
-      describe(plain ? 'plain mode' : 'ssl mode', function() {
-        body(protocol, npn, version, plain);
-      });
-    });
-  });
+    [ false, true ].forEach(function (plain) {
+      describe(plain ? 'plain mode' : 'ssl mode', function () {
+        body(protocol, npn, version, plain)
+      })
+    })
+  })
 }
 
