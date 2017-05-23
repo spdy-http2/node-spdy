@@ -8,6 +8,11 @@ var util = require('util')
 var fixtures = require('./fixtures')
 var spdy = require('../')
 
+// Node.js 0.10 and 0.12 support
+Object.assign = process.versions.modules >= 46
+  ? Object.assign // eslint-disable-next-line
+  : util._extend
+
 describe('SPDY Client', function () {
   describe('regular', function () {
     fixtures.everyConfig(function (protocol, npn, version, plain) {
@@ -18,7 +23,7 @@ describe('SPDY Client', function () {
       beforeEach(function (done) {
         hmodule = plain ? http : https
 
-        var options = util._extend({
+        var options = Object.assign({
           spdy: {
             plain: plain
           }
@@ -165,7 +170,7 @@ describe('SPDY Client', function () {
       beforeEach(function (done) {
         hmodule = plain ? http : https
 
-        var options = util._extend({
+        var options = Object.assign({
           spdy: {
             plain: plain,
             'x-forwarded-for': true
