@@ -1,7 +1,10 @@
 # SPDY Server for node.js
 
-[![Build Status](https://travis-ci.org/indutny/node-spdy.svg?branch=master)](https://travis-ci.org/indutny/node-spdy)
-[![NPM version](https://badge.fury.io/js/spdy.svg)](http://badge.fury.io/js/spdy)
+[![Build Status](https://travis-ci.org/spdy-http2/node-spdy.svg?branch=master)](http://travis-ci.org/spdy-http2/node-spdy)
+[![NPM version](https://badge.fury.io/js/node-spdy.svg)](http://badge.fury.io/js/node-spdy)
+[![dependencies Status](https://david-dm.org/spdy-http2/node-spdy/status.svg?style=flat-square)](https://david-dm.org/spdy-http2/node-spdy)
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com/)
+[![Waffle](https://img.shields.io/badge/track-waffle-blue.svg?style=flat-square)](https://waffle.io/spdy-http2/node-spdy)
 
 With this module you can create [HTTP2][0] / [SPDY][1] servers
 in node.js with natural http module interface and fallback to regular https
@@ -10,6 +13,8 @@ in node.js with natural http module interface and fallback to regular https
 This module named `spdy` but it [provides](https://github.com/indutny/node-spdy/issues/269#issuecomment-239014184) support for both http/2 (h2) and spdy (2,3,3.1). Also, `spdy` is compatible with Express.
 
 ## Usage
+
+### Examples
 
 Server:
 ```javascript
@@ -55,7 +60,7 @@ server.listen(3000);
 Client:
 ```javascript
 var spdy = require('spdy');
-var http = require('http');
+var https = require('https');
 
 var agent = spdy.createAgent({
   host: 'www.google.com',
@@ -63,15 +68,15 @@ var agent = spdy.createAgent({
 
   // Optional SPDY options
   spdy: {
-    plain: false or true,
-    ssl: false or true,
+    plain: false,
+    ssl: true,
 
     // **optional** send X_FORWARDED_FOR
     'x-forwarded-for': '127.0.0.1'
   }
 });
 
-http.get({
+https.get({
   host: 'www.google.com',
   agent: agent
 }, function(response) {
@@ -97,27 +102,7 @@ var agent = spdy.createAgent({
 });
 ```
 
-## API
-
-API is compatible with `http` and `https` module, but you can use another
-function as base class for SPDYServer.
-
-```javascript
-spdy.createServer(
-  [base class constructor, i.e. https.Server],
-  { /* keys and options */ }, // <- the only one required argument
-  [request listener]
-).listen([port], [host], [callback]);
-```
-
-Request listener will receive two arguments: `request` and `response`. They're
-both instances of `http`'s `IncomingMessage` and `OutgoingMessage`. But three
-custom properties are added to both of them: `isSpdy`, `spdyVersion`. `isSpdy`
-is `true` when the request was processed using HTTP2/SPDY protocols, it is
-`false` in case of HTTP/1.1 fallback. `spdyVersion` is either of: `2`, `3`,
-`3.1`, or `4` (for HTTP2).
-
-### Push streams
+#### Push streams
 
 It is possible to initiate [PUSH_PROMISE][5] to send content to clients _before_
 the client requests it.
@@ -171,7 +156,7 @@ NOTE: You're responsible for the `stream` object once given it in `.push()`
 callback or `push` event. Hence ignoring `error` event on it will result in
 uncaught exception and crash your program.
 
-### Trailing headers
+#### Trailing headers
 
 Server usage:
 ```javascript
@@ -199,7 +184,7 @@ req.addTrailers({ /* ... */ });
 req.end();
 ```
 
-### Options
+#### Options
 
 All options supported by [tls][2] work with node-spdy.
 
@@ -217,6 +202,27 @@ Additional options may be passed via `spdy` sub-object:
   `['h2','spdy/3.1', 'spdy/3', 'spdy/2','http/1.1', 'http/1.0']`)
 * `protocol` - use specific protocol if no NPN/ALPN ex In addition,
 * `maxStreams` - set "[maximum concurrent streams][3]" protocol option
+
+### API
+
+API is compatible with `http` and `https` module, but you can use another
+function as base class for SPDYServer.
+
+```javascript
+spdy.createServer(
+  [base class constructor, i.e. https.Server],
+  { /* keys and options */ }, // <- the only one required argument
+  [request listener]
+).listen([port], [host], [callback]);
+```
+
+Request listener will receive two arguments: `request` and `response`. They're
+both instances of `http`'s `IncomingMessage` and `OutgoingMessage`. But three
+custom properties are added to both of them: `isSpdy`, `spdyVersion`. `isSpdy`
+is `true` when the request was processed using HTTP2/SPDY protocols, it is
+`false` in case of HTTP/1.1 fallback. `spdyVersion` is either of: `2`, `3`,
+`3.1`, or `4` (for HTTP2).
+
 
 #### Contributors
 

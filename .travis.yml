@@ -1,10 +1,15 @@
-language: node_js
 sudo: false
+
+language: node_js
+
 node_js:
   - "0.10"
   - "0.12"
   - "4"
-  - "5"
-branches:
-  only:
-    - master
+  - "6"
+  - "stable"
+
+script:
+  - npm run lint
+  - npm test
+  - npm run coverage
