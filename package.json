@@ -34,17 +34,17 @@
     "Jesse Cravens <jesse.cravens@gmail.com>"
   ],
   "dependencies": {
-    "debug": "^2.2.0",
-    "handle-thing": "^1.2.4",
-    "http-deceiver": "^1.2.4",
+    "debug": "^2.6.8",
+    "handle-thing": "^1.2.5",
+    "http-deceiver": "^1.2.7",
     "select-hose": "^2.0.0",
-    "spdy-transport": "^2.0.15"
+    "spdy-transport": "^2.0.18"
   },
   "devDependencies": {
     "istanbul": "^0.4.5",
-    "mocha": "^2.2.x",
+    "mocha": "^3.4.1",
     "pre-commit": "^1.2.2",
-    "standard": "^8.6.0"
+    "standard": "^10.0.2"
   },
   "engines": [
     "node >= 0.7.0"
