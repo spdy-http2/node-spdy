@@ -10,6 +10,11 @@ var util = require('util')
 var fixtures = require('./fixtures')
 var spdy = require('../')
 
+// Node.js 0.10 and 0.12 support
+Object.assign = process.versions.modules >= 46
+  ? Object.assign // eslint-disable-next-line
+  : util._extend
+
 describe('SPDY Server', function () {
   fixtures.everyConfig(function (protocol, npn, version, plain) {
     var server
