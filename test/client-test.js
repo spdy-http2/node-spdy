@@ -3,7 +3,6 @@
 var assert = require('assert')
 var https = require('https')
 var http = require('http')
-var util = require('util')
 
 var fixtures = require('./fixtures')
 var spdy = require('../')
@@ -18,7 +17,7 @@ describe('SPDY Client', function () {
       beforeEach(function (done) {
         hmodule = plain ? http : https
 
-        var options = util._extend({
+        var options = Object.assign({
           spdy: {
             plain: plain
           }
@@ -165,7 +164,7 @@ describe('SPDY Client', function () {
       beforeEach(function (done) {
         hmodule = plain ? http : https
 
-        var options = util._extend({
+        var options = Object.assign({
           spdy: {
             plain: plain,
             'x-forwarded-for': true

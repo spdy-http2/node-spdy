@@ -16,7 +16,7 @@ describe('SPDY Server', function () {
     var client
 
     beforeEach(function (done) {
-      server = spdy.createServer(util._extend({
+      server = spdy.createServer(Object.assign({
         spdy: {
           'x-forwarded-for': true,
           plain: plain
