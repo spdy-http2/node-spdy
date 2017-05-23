@@ -1,7 +1,7 @@
 # SPDY Server for node.js
 
 [![Build Status](https://travis-ci.org/spdy-http2/node-spdy.svg?branch=master)](http://travis-ci.org/spdy-http2/node-spdy)
-[![NPM version](https://badge.fury.io/js/node-spdy.svg)](http://badge.fury.io/js/node-spdy)
+[![NPM version](https://badge.fury.io/js/spdy.svg)](http://badge.fury.io/js/spdy)
 [![dependencies Status](https://david-dm.org/spdy-http2/node-spdy/status.svg?style=flat-square)](https://david-dm.org/spdy-http2/node-spdy)
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com/)
 [![Waffle](https://img.shields.io/badge/track-waffle-blue.svg?style=flat-square)](https://waffle.io/spdy-http2/node-spdy)
