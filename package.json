@@ -39,7 +39,7 @@
     "http-deceiver": "^1.2.7",
     "safe-buffer": "^5.0.1",
     "select-hose": "^2.0.0",
-    "spdy-transport": "^2.0.18"
+    "spdy-transport": "https://github.com/deveshmehta7/spdy-transport.git#assertionErrorFix"
   },
   "devDependencies": {
     "istanbul": "^0.4.5",
