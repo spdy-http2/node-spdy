@@ -34,7 +34,7 @@
     "Jesse Cravens <jesse.cravens@gmail.com>"
   ],
   "dependencies": {
-    "debug": "^2.6.8",
+    "debug": "^3.1.0",
     "handle-thing": "^1.2.5",
     "http-deceiver": "^1.2.7",
     "safe-buffer": "^5.0.1",
