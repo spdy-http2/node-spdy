@@ -59,7 +59,7 @@ function expectData (stream, expected, callback) {
     actual += chunk
   })
   stream.on('end', function () {
-    assert.equal(actual, expected)
+    assert.strictEqual(actual, expected)
     callback()
   })
 }

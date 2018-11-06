@@ -90,8 +90,8 @@ describe('SPDY Client', function () {
             a: 'b'
           }
         }, function (res) {
-          assert.equal(res.statusCode, 200)
-          assert.equal(res.headers.a, 'b')
+          assert.strictEqual(res.statusCode, 200)
+          assert.strictEqual(res.headers.a, 'b')
 
           fixtures.expectData(res, 'okay', done)
         })
@@ -109,16 +109,16 @@ describe('SPDY Client', function () {
             post: 'headers'
           }
         }, function (res) {
-          assert.equal(res.statusCode, 200)
-          assert.equal(res.headers.post, 'headers')
+          assert.strictEqual(res.statusCode, 200)
+          assert.strictEqual(res.headers.post, 'headers')
 
           fixtures.expectData(res, 'post body', done)
         })
 
         agent._spdyState.socket.once(plain ? 'connect' : 'secureConnect',
-                                     function () {
-                                       req.end('post body')
-                                     })
+          function () {
+            req.end('post body')
+          })
       })
 
       it('should receive PUSH_PROMISE', function (done) {
@@ -128,13 +128,13 @@ describe('SPDY Client', function () {
           method: 'GET',
           path: '/get'
         }, function (res) {
-          assert.equal(res.statusCode, 200)
+          assert.strictEqual(res.statusCode, 200)
 
           res.resume()
         })
         req.on('push', function (push) {
-          assert.equal(push.path, '/push')
-          assert.equal(push.headers.push, 'yes')
+          assert.strictEqual(push.path, '/push')
+          assert.strictEqual(push.headers.push, 'yes')
 
           push.resume()
           push.once('end', done)
@@ -149,10 +149,10 @@ describe('SPDY Client', function () {
           method: 'GET',
           path: '/get'
         }, function (res) {
-          assert.equal(res.statusCode, 200)
+          assert.strictEqual(res.statusCode, 200)
 
           res.on('trailers', function (headers) {
-            assert.equal(headers.trai, 'ler')
+            assert.strictEqual(headers.trai, 'ler')
             fixtures.expectData(res, 'okay', done)
           })
         })
@@ -216,8 +216,8 @@ describe('SPDY Client', function () {
           method: 'GET',
           path: '/get'
         }, function (res) {
-          assert.equal(res.statusCode, 200)
-          assert.equal(res.headers['x-forwarded-for'], '1.2.3.4')
+          assert.strictEqual(res.statusCode, 200)
+          assert.strictEqual(res.headers['x-forwarded-for'], '1.2.3.4')
 
           res.resume()
           res.once('end', done)
