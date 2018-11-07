@@ -81,14 +81,14 @@ exports.everyProtocol = function everyProtocol (body) {
 }
 
 exports.everyConfig = function everyConfig (body) {
-  exports.everyProtocol(function (protocol, npn, version) {
-    if (npn === 'spdy/2') {
+  exports.everyProtocol(function (protocol, alpn, version) {
+    if (alpn === 'spdy/2') {
       return
     }
 
     [ false, true ].forEach(function (plain) {
       describe(plain ? 'plain mode' : 'ssl mode', function () {
-        body(protocol, npn, version, plain)
+        body(protocol, alpn, version, plain)
       })
     })
   })
