@@ -36,7 +36,7 @@
   "dependencies": {
     "debug": "^4.1.0",
     "handle-thing": "github:jacobheun/handle-thing#fix/updates",
-    "http-deceiver": "^1.2.7",
+    "http-deceiver": "github:jacobheun/http-deceiver#chore/update-deps",
     "select-hose": "^2.0.0",
     "spdy-transport": "github:jacobheun/spdy-transport#chore/update-deps"
   },
