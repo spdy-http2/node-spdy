@@ -15,7 +15,7 @@ Object.assign = process.versions.modules >= 46
 
 describe('SPDY Client', function () {
   describe('regular', function () {
-    fixtures.everyConfig(function (protocol, npn, version, plain) {
+    fixtures.everyConfig(function (protocol, alpn, version, plain) {
       var server
       var agent
       var hmodule
@@ -59,8 +59,8 @@ describe('SPDY Client', function () {
             port: fixtures.port,
             spdy: {
               plain: plain,
-              protocol: plain ? npn : null,
-              protocols: [ npn ]
+              protocol: plain ? alpn : null,
+              protocols: [ alpn ]
             }
           })
 
@@ -162,7 +162,7 @@ describe('SPDY Client', function () {
   })
 
   describe('x-forwarded-for', function () {
-    fixtures.everyConfig(function (protocol, npn, version, plain) {
+    fixtures.everyConfig(function (protocol, alpn, version, plain) {
       var server
       var agent
       var hmodule
@@ -188,8 +188,8 @@ describe('SPDY Client', function () {
             spdy: {
               'x-forwarded-for': '1.2.3.4',
               plain: plain,
-              protocol: plain ? npn : null,
-              protocols: [ npn ]
+              protocol: plain ? alpn : null,
+              protocols: [ alpn ]
             }
           })
 
