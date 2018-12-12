@@ -166,6 +166,8 @@ describe('SPDY Client', function () {
       var server
       var agent
       var hmodule
+      // The underlying spdy Connection created by the agent.
+      var connection
 
       beforeEach(function (done) {
         hmodule = plain ? http : https
@@ -192,8 +194,11 @@ describe('SPDY Client', function () {
               protocols: [ alpn ]
             }
           })
-
-          done()
+          // Once aagent has connection, keep a copy for testing.
+          agent.once('_connect', function () {
+            connection = agent._spdyState.connection
+            done()
+          })
         })
       })
 
@@ -223,6 +228,14 @@ describe('SPDY Client', function () {
           res.once('end', done)
         })
         req.end()
+      })
+
+      it('agent should emit connection level errors', function (done) {
+        agent.once('error', function (err) {
+          assert.strictEqual(err.message, 'mock error')
+          done()
+        })
+        connection.emit('error', new Error('mock error'))
       })
     })
   })
