@@ -27,7 +27,7 @@ describe('SPDY Server', function () {
         var socket = (plain ? net : tls).connect({
           rejectUnauthorized: false,
           port: fixtures.port,
-          ALPNProtocols: [ alpn ]
+          ALPNProtocols: [alpn]
         }, function () {
           client = transport.connection.create(socket, {
             protocol: protocol,
@@ -433,7 +433,7 @@ describe('SPDY Server', function () {
       var req = https.request({
         agent: false,
         rejectUnauthorized: false,
-        NPNProtocols: [ 'http/1.1' ],
+        NPNProtocols: ['http/1.1'],
         port: fixtures.port,
         method: 'GET',
         path: '/'
@@ -469,7 +469,7 @@ describe('SPDY Server', function () {
       var req = https.request({
         agent: false,
         rejectUnauthorized: false,
-        NPNProtocols: [ 'http/1.1' ],
+        NPNProtocols: ['http/1.1'],
         port: fixtures.port,
         method: 'GET',
         path: '/'

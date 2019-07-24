@@ -60,7 +60,7 @@ describe('SPDY Client', function () {
             spdy: {
               plain: plain,
               protocol: plain ? alpn : null,
-              protocols: [ alpn ]
+              protocols: [alpn]
             }
           })
 
@@ -191,7 +191,7 @@ describe('SPDY Client', function () {
               'x-forwarded-for': '1.2.3.4',
               plain: plain,
               protocol: plain ? alpn : null,
-              protocols: [ alpn ]
+              protocols: [alpn]
             }
           })
           // Once aagent has connection, keep a copy for testing.
