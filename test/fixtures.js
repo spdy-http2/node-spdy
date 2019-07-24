@@ -86,7 +86,7 @@ exports.everyConfig = function everyConfig (body) {
       return
     }
 
-    [ false, true ].forEach(function (plain) {
+    [false, true].forEach(function (plain) {
       describe(plain ? 'plain mode' : 'ssl mode', function () {
         body(protocol, alpn, version, plain)
       })
